@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/lightweight-project-spec.schema.json",
+  "title": "Lightweight Project Spec",
+  "description": "A schema for a lightweight, evolving requirement specification document.",
+  "$comment": "schemaVersion: 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "lastUpdated": {
+      "type": "string",
+      "format": "date",
+      "description": "最后更新日期 (YYYY-MM-DD)"
+    },
+    "specVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "description": "规格版本号，如 1.0 或 1.1.0"
+    },
+    "coreIdea": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["problemStatement", "targetAudience", "coreValue"],
+      "properties": {
+        "problemStatement": { "type": "string", "minLength": 1 },
+        "targetAudience": { "type": "string", "minLength": 1 },
+        "coreValue": { "type": "string", "minLength": 1 }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inScope", "outOfScope"],
+      "properties": {
+        "inScope": {
+          "type": "array",
+          "minItems": 0,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "outOfScope": {
+          "type": "array",
+          "minItems": 0,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "story",
+          "requiredFunctions"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^scn-[a-z0-9-]+$",
+            "description": "可选：场景 ID (如 scn-onboarding)"
+          },
+          "name": { "type": "string", "minLength": 1 },
+          "story": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["userType", "action", "benefit"],
+            "properties": {
+              "userType": { "type": "string", "minLength": 1 },
+              "action": { "type": "string", "minLength": 1 },
+              "benefit": { "type": "string", "minLength": 1 }
+            }
+          },
+          "requiredFunctions": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "type": "string", "minLength": 1 }
+      },
+          "acceptanceCriteria": {
+        "type": "array",
+        "minItems": 0,
+        "uniqueItems": true,
+        "items": { "type": "string", "minLength": 1 }
+      },
+          "priority": { "$ref": "#/$defs/priority" },
+          "status": { "$ref": "#/$defs/scenarioStatus" },
+          "dependencies": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+              "type": "string",
+              "pattern": "^scn-[a-z0-9-]+$"
+            },
+            "description": "依赖的其他场景ID"
+          },
+          "estimatedComplexity": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"],
+            "description": "场景实现的预估复杂度"
+          }
+        }
+      }
+    },
+    "prioritization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+      "MVP": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^(scn-[a-z0-9-]+|fn-[a-z0-9-]+)$"
+        },
+        "description": "支撑核心价值的最小闭环功能集合"
+      },
+      "Later": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^(scn-[a-z0-9-]+|fn-[a-z0-9-]+)$"
+        }
+      },
+      "Maybe": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^(scn-[a-z0-9-]+|fn-[a-z0-9-]+)$"
+        }
+      }
+    }
+    },
+    "decisionLog": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "decision"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "decision": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string" },
+          "rejectedOptions": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": { "type": "string", "minLength": 1 }
+      },
+          "status": { "$ref": "#/$defs/decisionStatus" },
+          "impact": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "影响的范围边界项"
+              },
+              "scenarios": {
+                "type": "array",
+                "items": { "type": "string", "pattern": "^scn-[a-z0-9-]+$" },
+                "description": "影响的场景ID"
+              }
+            }
+          },
+          "decisionType": {
+            "type": "string",
+            "enum": ["Feature", "Scope", "Technical", "Process"],
+            "description": "决策类型分类"
+          }
+        }
+      }
+    },
+    "changeHistory": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "description"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "description": { "type": "string", "minLength": 1 },
+          "related": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "可选：受影响的字段路径/场景 ID 等"
+          }
+        }
+      }
+    },
+    "nonFunctionalNotes": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "仅记录与项目成败高度相关且可验证的关键约束"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "generatedBy": {
+        "type": "array",
+        "minItems": 0,
+        "uniqueItems": true,
+        "items": { "$ref": "#/$defs/role" }
+      },
+        "conversationLinks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "相关对话/消息/记录的引用 ID"
+        },
+        "documentStatus": { "$ref": "#/$defs/documentStatus" },
+      "tags": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": { "type": "string" },
+        "description": "规格文档的标签，便于分类和检索"
+      },
+        "reviewHistory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["date", "reviewer", "status"],
+            "properties": {
+              "date": { "type": "string", "format": "date" },
+              "reviewer": { "$ref": "#/$defs/role" },
+              "status": { "$ref": "#/$defs/reviewStatus" },
+              "comments": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "lastUpdated",
+    "specVersion",
+    "coreIdea",
+    "scope"
+  ],
+  "$defs": {
+    "scenarioStatus": {
+      "type": "string",
+      "enum": ["Draft", "InReview", "Approved", "Implemented", "Deprecated"],
+      "description": "场景的状态"
+    },
+    "documentStatus": {
+      "type": "string",
+      "enum": ["Draft", "InReview", "Active", "Archived"],
+      "description": "文档的整体状态"
+    },
+    "decisionStatus": {
+      "type": "string",
+      "enum": ["Proposed", "Accepted", "Rejected"],
+      "description": "决策的状态"
+    },
+    "reviewStatus": {
+      "type": "string",
+      "enum": ["Pending", "Approved", "RejectedWithComments"],
+      "description": "评审的状态"
+    },
+    "priority": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["MVP", "High", "Medium", "Low"]
+        },
+        "justification": {
+          "type": "string",
+          "description": "设置该优先级的理由"
+        }
+      },
+      "description": "执行层面的紧急度/重要性，不等同于顶层 prioritization (MVP/Later/Maybe) 的路线桶"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "Scope Planner",
+        "Analyst",
+        "Reviewer",
+        "Recorder",
+        "Promoter"
+      ]
+    }
+  }
+}

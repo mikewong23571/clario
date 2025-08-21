@@ -1,0 +1,281 @@
+{
+  "lastUpdated": "2024-12-19",
+  "specVersion": "1.0.0",
+  "coreIdea": {
+    "problemStatement": "个人开发者和小团队在项目开发过程中，脑中模糊的想法难以落地为结构化需求，缺乏外部质疑和推进机制，容易陷入自嗨或停滞状态。传统的完整SRS文档成本过高，但不写又容易偏离方向。",
+    "targetAudience": "个人开发者、2-5人小团队，聚焦在提升个人/小团队效能的自驱项目",
+    "coreValue": "通过多智能体协作的对话式澄清机制，将模糊想法转化为清晰、轻量的需求规格文档，并保留决策与演进历史，为项目从想法走向落地提供结构化但低成本的路径。"
+  },
+  "scope": {
+    "inScope": [
+      "渐进式对话澄清功能",
+      "多智能体协作系统（范围规划师、访谈员、审查员、记录员、推进者）",
+      "智能检测歧义、不一致或遗漏",
+      "结构化沉淀确认内容为JSON格式",
+      "自动文档生成（Markdown/JSON导出）",
+      "决策记录与需求演进历史",
+      "轻量化需求规格文档生成",
+      "单用户与系统对话交互",
+      "支持1-6个月中小型项目",
+      "主要功能点不超过20-30个的项目规模"
+    ],
+    "outOfScope": [
+      "商业级项目管理功能（预算、合同、审批、组织架构、干系人管理）",
+      "技术实现细节（技术选型、数据库设计、API定义、算法实现）",
+      "项目管理工具功能（任务分配、进度跟踪、燃尽图、时间估算）",
+      "UI/原型/代码生成",
+      "外部文档处理（导入Word/PDF等文档）",
+      "多人协作功能（初期版本）",
+      "界面原型、线框图输出",
+      "复杂硬件或服务设计"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "scn-initial-clarification",
+      "name": "初始想法澄清",
+      "story": {
+        "userType": "个人开发者",
+        "action": "输入一个模糊的项目想法，通过与范围规划师的对话逐步明确项目核心目标、边界和差异化价值",
+        "benefit": "将脑中模糊的想法转化为清晰的项目定位和范围边界"
+      },
+      "requiredFunctions": [
+        "对话界面",
+        "范围规划师智能体",
+        "问题引导机制",
+        "范围边界识别"
+      ],
+      "acceptanceCriteria": [
+        "能够通过对话明确项目要解决的核心问题",
+        "能够识别并定义项目的目标用户群体",
+        "能够明确项目的核心价值主张",
+        "能够区分项目范围内外的功能边界"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "这是整个系统的核心入口功能，没有这个功能就无法开始需求澄清过程"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "High"
+    },
+    {
+      "id": "scn-requirement-analysis",
+      "name": "需求分析与拆解",
+      "story": {
+        "userType": "项目负责人",
+        "action": "在范围确定后，与访谈员智能体协作将宏观目标拆解为具体的功能需求和用户场景",
+        "benefit": "获得结构化的功能需求列表和用户使用场景描述"
+      },
+      "requiredFunctions": [
+        "访谈员智能体",
+        "需求拆解算法",
+        "用户故事生成",
+        "功能点识别"
+      ],
+      "acceptanceCriteria": [
+        "能够将宏观目标拆解为具体功能点",
+        "能够生成标准的用户故事格式",
+        "能够识别功能间的依赖关系",
+        "能够评估功能的复杂度"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "需求拆解是从想法到具体实现的关键桥梁"
+      },
+      "status": "Draft",
+      "dependencies": ["scn-initial-clarification"],
+      "estimatedComplexity": "High"
+    },
+    {
+      "id": "scn-real-time-review",
+      "name": "实时审查与质疑",
+      "story": {
+        "userType": "项目参与者",
+        "action": "在对话过程中接受审查员智能体的实时质疑和检查，识别模糊、矛盾之处",
+        "benefit": "确保需求的清晰性和一致性，避免后期返工"
+      },
+      "requiredFunctions": [
+        "审查员智能体",
+        "矛盾检测算法",
+        "歧义识别",
+        "实时反馈机制"
+      ],
+      "acceptanceCriteria": [
+        "能够识别需求描述中的歧义表达",
+        "能够发现功能需求间的矛盾",
+        "能够提出针对性的澄清问题",
+        "能够实时给出改进建议"
+      ],
+      "priority": {
+        "level": "High",
+        "justification": "质量保证功能，对最终输出的准确性至关重要"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-structured-recording",
+      "name": "结构化记录沉淀",
+      "story": {
+        "userType": "系统用户",
+        "action": "在对话过程中，记录员智能体在后台实时将确认的信息保存为结构化JSON记录",
+        "benefit": "确保所有确认的需求信息都被准确记录和保存"
+      },
+      "requiredFunctions": [
+        "记录员智能体",
+        "JSON结构化存储",
+        "实时数据同步",
+        "版本控制"
+      ],
+      "acceptanceCriteria": [
+        "能够实时将对话内容转换为结构化数据",
+        "能够按照预定义的JSON Schema格式存储",
+        "能够保持数据的完整性和一致性",
+        "能够支持增量更新"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "数据持久化是系统的基础功能"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-process-promotion",
+      "name": "流程推进与总结",
+      "story": {
+        "userType": "项目负责人",
+        "action": "通过推进者智能体的主动引导，完成各阶段的总结并推动对话向前进展",
+        "benefit": "确保需求澄清过程的完整性和连续性"
+      },
+      "requiredFunctions": [
+        "推进者智能体",
+        "流程状态管理",
+        "阶段总结生成",
+        "进度跟踪"
+      ],
+      "acceptanceCriteria": [
+        "能够识别当前对话所处的阶段",
+        "能够主动推动对话向下一阶段发展",
+        "能够生成阶段性总结",
+        "能够提醒遗漏的重要环节"
+      ],
+      "priority": {
+        "level": "High",
+        "justification": "流程控制对用户体验和效率至关重要"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-document-generation",
+      "name": "文档自动生成",
+      "story": {
+        "userType": "项目负责人",
+        "action": "随时导出轻量需求规格文档，支持Markdown和JSON格式",
+        "benefit": "获得可用于后续开发和沟通的正式需求文档"
+      },
+      "requiredFunctions": [
+        "文档生成引擎",
+        "Markdown渲染",
+        "JSON导出",
+        "模板系统"
+      ],
+      "acceptanceCriteria": [
+        "能够生成格式规范的Markdown文档",
+        "能够导出完整的JSON规格文件",
+        "能够支持自定义文档模板",
+        "能够保持文档与数据的同步"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "文档输出是系统的最终价值体现"
+      },
+      "status": "Draft",
+      "dependencies": ["scn-structured-recording"],
+      "estimatedComplexity": "Low"
+    }
+  ],
+  "prioritization": {
+    "MVP": [
+      "scn-initial-clarification",
+      "scn-requirement-analysis",
+      "scn-structured-recording",
+      "scn-document-generation"
+    ],
+    "Later": [
+      "scn-real-time-review",
+      "scn-process-promotion"
+    ],
+    "Maybe": []
+  },
+  "decisionLog": [
+    {
+      "date": "2024-12-19",
+      "decision": "采用多智能体协作架构，而非单一AI助手模式",
+      "reason": "不同角色的智能体可以提供专业化的服务，模拟真实团队中的角色分工，提高需求澄清的质量和全面性",
+      "rejectedOptions": [
+        "单一通用AI助手",
+        "基于规则的问答系统"
+      ],
+      "status": "Accepted",
+      "decisionType": "Feature",
+      "impact": {
+        "scope": ["系统功能"],
+        "scenarios": ["scn-initial-clarification", "scn-requirement-analysis", "scn-real-time-review"]
+      }
+    },
+    {
+      "date": "2024-12-19",
+      "decision": "聚焦轻量化需求规格文档，不涉及技术实现细节",
+      "reason": "目标用户是个人开发者和小团队，需要的是快速、低成本的需求澄清，而非复杂的技术设计",
+      "rejectedOptions": [
+        "包含技术架构设计",
+        "生成详细的API文档",
+        "包含数据库设计"
+      ],
+      "status": "Accepted",
+      "decisionType": "Scope",
+      "impact": {
+        "scope": ["澄清的重点"]
+      }
+    }
+  ],
+  "changeHistory": [
+    {
+      "date": "2024-12-19",
+      "description": "创建初始项目需求规格文档，基于项目范围定义书和JSON Schema结构",
+      "related": ["coreIdea", "scope", "scenarios", "prioritization"]
+    }
+  ],
+  "nonFunctionalNotes": [
+    "系统响应时间应在3秒内完成单轮对话处理",
+    "支持并发用户数不少于100个",
+    "数据存储应确保99.9%的可用性",
+    "生成的文档应符合Markdown和JSON标准格式",
+    "AI模型调用应有降级机制，确保服务稳定性"
+  ],
+  "meta": {
+    "generatedBy": [
+      "Scope Planner",
+      "Analyst",
+      "Recorder"
+    ],
+    "documentStatus": "Draft",
+    "tags": [
+      "需求澄清",
+      "多智能体",
+      "轻量化文档",
+      "个人项目",
+      "小团队协作"
+    ],
+    "reviewHistory": [
+      {
+        "date": "2024-12-19",
+        "reviewer": "Recorder",
+        "status": "Pending",
+        "comments": "初始版本创建完成，等待进一步评审和完善"
+      }
+    ]
+  }
+}

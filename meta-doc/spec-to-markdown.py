@@ -111,7 +111,8 @@ def format_prioritization(prioritization):
     priority_sections = [
         ('MVP', '🎯 最小可行产品', prioritization.get('MVP', [])),
         ('Later', '📅 后续版本', prioritization.get('Later', [])),
-        ('Maybe', '🤔 可能考虑', prioritization.get('Maybe', []))
+        ('Maybe', '🤔 可能考虑', prioritization.get('Maybe', [])),
+        ('System', '⚙️ 系统能力', prioritization.get('System', [])),
     ]
     
     for key, title, items in priority_sections:
@@ -171,17 +172,46 @@ def format_change_history(change_history):
     
     return md
 
+def format_end_to_end_flow(flow):
+    """格式化端到端流程部分"""
+    if not flow:
+        return ""
+    md = "## 🧭 端到端流程\n\n"
+    if 'title' in flow and flow['title']:
+        md += f"### {flow['title']}\n\n"
+    if 'description' in flow and flow['description']:
+        md += f"{flow['description']}\n\n"
+    if 'steps' in flow and flow['steps']:
+        for step in flow['steps']:
+            md += f"- {step}\n"
+        md += "\n"
+    return md
+
 def format_non_functional_notes(notes):
-    """格式化非功能性需求部分"""
+    """格式化非功能性需求部分（结构化）"""
     if not notes:
         return ""
-    
     md = "## ⚡ 非功能性需求\n\n"
-    
-    for note in notes:
-        md += f"- {note}\n"
-    md += "\n"
-    
+    for item in notes:
+        if isinstance(item, str):
+            md += f"- {item}\n\n"
+            continue
+        category = item.get('category', '')
+        note = item.get('note', '')
+        targets = item.get('targets', [])
+        if category:
+            md += f"### {category}\n"
+        if note:
+            md += f"{note}\n\n"
+        if targets:
+            for target in targets:
+                mode = target.get('mode', '')
+                constraints = target.get('constraints', [])
+                if mode:
+                    md += f"#### {mode}\n"
+                for c in constraints:
+                    md += f"- {c}\n"
+                md += "\n"
     return md
 
 def format_meta(meta):
@@ -208,40 +238,71 @@ def format_meta(meta):
     
     return md
 
+def format_interaction_session_models(section):
+    """格式化交互与会话模型说明"""
+    if not section:
+        return ""
+    title = section.get('title', '交互与会话模型说明')
+    models = section.get('models', [])
+    if not models:
+        return ""
+    md = f"## 🏗️ {title}\n\n"
+    for m in models:
+        mid = m.get('id', '')
+        name = m.get('name', '')
+        desc = m.get('description', '')
+        core = m.get('coreConcept', '')
+        multi = m.get('multiDocHandling', '')
+        persistence = m.get('persistence', {})
+        header = f"模型 {mid}：{name}".strip('：')
+        md += f"### {header}\n"
+        if desc:
+            md += f"- 描述：{desc}\n"
+        if core:
+            md += f"- 核心概念：{core}\n"
+        if multi:
+            md += f"- 多文档处理：{multi}\n"
+        if isinstance(persistence, dict):
+            opts = persistence.get('options')
+            pdesc = persistence.get('description')
+            if opts:
+                md += f"- 持久化与会话：\n"
+                for opt in opts:
+                    oid = opt.get('id', '')
+                    otitle = opt.get('title', '')
+                    odesc = opt.get('description', '')
+                    label = f"选项 {oid}（{otitle}）" if oid or otitle else "选项"
+                    md += f"  - {label}：{odesc}\n"
+            elif pdesc:
+                md += f"- 持久化与会话：{pdesc}\n"
+        md += "\n"
+    return md
+
 def spec_to_markdown(spec_data):
     """将规格数据转换为Markdown格式"""
     md = f"# {spec_data.get('title', '项目需求规格文档')}\n\n"
-    
-    # 文档信息
     md += f"**最后更新**: {spec_data['lastUpdated']}\n"
     md += f"**规格版本**: {spec_data['specVersion']}\n\n"
-    
-    # 各个部分
     md += format_core_idea(spec_data['coreIdea'])
     md += format_scope(spec_data['scope'])
-    
+    if 'endToEndFlow' in spec_data:
+        md += format_end_to_end_flow(spec_data['endToEndFlow'])
     if 'scenarios' in spec_data:
         md += format_scenarios(spec_data['scenarios'])
-    
+    if 'interactionSessionModels' in spec_data:
+        md += format_interaction_session_models(spec_data['interactionSessionModels'])
     if 'prioritization' in spec_data:
         md += format_prioritization(spec_data['prioritization'])
-    
     if 'decisionLog' in spec_data:
         md += format_decision_log(spec_data['decisionLog'])
-    
     if 'changeHistory' in spec_data:
         md += format_change_history(spec_data['changeHistory'])
-    
     if 'nonFunctionalNotes' in spec_data:
         md += format_non_functional_notes(spec_data['nonFunctionalNotes'])
-    
     if 'meta' in spec_data:
         md += format_meta(spec_data['meta'])
-    
-    # 生成信息
     md += "---\n\n"
     md += f"*此文档由 spec-to-markdown 工具自动生成于 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
-    
     return md
 
 def main():

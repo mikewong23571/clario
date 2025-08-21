@@ -1,0 +1,547 @@
+{
+  "lastUpdated": "2024-07-31",
+  "specVersion": "1.1.0",
+  "coreIdea": {
+    "problemStatement": "个人开发者和小团队在项目开发过程中，脑中模糊的想法难以落地为结构化需求，缺乏外部质疑和推进机制，容易陷入自嗨或停滞状态。传统的完整SRS文档成本过高，但不写又容易偏离方向。",
+    "targetAudience": "个人开发者、2-5人小团队，聚焦在提升个人/小团队效能的自驱项目",
+    "coreValue": "通过多智能体协作的对话式澄清机制，将模糊想法转化为清晰、轻量的需求规格文档，并保留决策与演进历史，为项目从想法走向落地提供结构化但低成本的路径。"
+  },
+  "scope": {
+    "inScope": [
+      "渐进式对话澄清功能",
+      "多智能体协作系统（范围规划师、访谈员、审查员、记录员、推进者）",
+      "智能检测歧义、不一致或遗漏",
+      "结构化沉淀确认内容为JSON格式",
+      "自动文档生成（Markdown/JSON导出）",
+      "决策记录与需求演进历史",
+      "轻量化需求规格文档生成",
+      "单用户与系统对话交互",
+      "支持1-6个月中小型项目",
+      "主要功能点不超过20-30个的项目规模"
+    ],
+    "outOfScope": [
+      "商业级项目管理功能（预算、合同、审批、组织架构、干系人管理）",
+      "技术实现细节（技术选型、数据库设计、API定义、算法实现）",
+      "项目管理工具功能（任务分配、进度跟踪、燃尽图、时间估算）",
+      "UI/原型/代码生成",
+      "外部文档处理（导入Word/PDF等文档）",
+      "多人协作功能（初期版本）",
+      "界面原型、线框图输出",
+      "复杂硬件或服务设计"
+    ]
+  },
+  "endToEndFlow": {
+    "title": "典型用户旅程 (Typical User Journey)",
+    "description": "为确保所有功能点在用户体验上形成闭环，定义核心端到端流程如下：",
+    "steps": [
+      "1. 启动应用，进入 [项目仪表盘]。",
+      "2. [创建新项目]，为新想法命名。",
+      "3. 进入项目工作区，通过 [引导式想法探索] 定义核心思想。",
+      "4. 在AI协助下进行 [协作式范围定义]，明确项目边界。",
+      "5. 在 [实时同步的文档预览] 中查看和修订文档，通过 [上下文讨论] 和 [按需审查] 解决AI发现的 [一致性问题]。",
+      "6. 在任何阶段，通过 [一键导出文档] 获得当前规格。",
+      "7. 关闭应用后，工作进度被保存，下次通过 [继续未完成的工作] 从仪表盘进入即可恢复。"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "scn-project-dashboard",
+      "name": "项目仪表盘 (Project Dashboard)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "启动应用时，看到一个包含我所有项目的列表",
+        "benefit": "可以快速地选择、切换和管理我的不同需求文档"
+      },
+      "requiredFunctions": [
+        "项目列表视图",
+        "项目搜索/过滤功能",
+        "打开/删除项目的操作"
+      ],
+      "acceptanceCriteria": [
+        "应用启动后默认显示项目仪表盘",
+        "仪表盘以卡片或列表形式展示所有项目",
+        "每个项目都显示名称和最后修改日期",
+        "用户可以从仪表盘中选择并打开一个项目"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "是用户管理多个项目的基本入口，提供了核心的导航功能。"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-create-project",
+      "name": "创建新项目 (Create New Project)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在项目仪表盘上点击“新建项目”按钮，并指定一个项目名称",
+        "benefit": "可以从一个空白的状态开始，为一个全新的想法构建需求规格"
+      },
+      "requiredFunctions": [
+        "“新建项目”按钮",
+        "项目名称输入对话框",
+        "创建并存储新的项目文件结构"
+      ],
+      "acceptanceCriteria": [
+        "用户点击“新建项目”后，系统会提示输入项目名称",
+        "创建成功后，新项目会出现在项目仪表盘中",
+        "打开新项目后，用户会看到一个空白的需求文档和初始的引导对话"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "是用户旅程的起点，是产品最基本的功能之一。"
+      },
+      "status": "Draft",
+      "dependencies": [
+        "scn-project-dashboard"
+      ],
+      "estimatedComplexity": "Low"
+    },
+    {
+      "id": "scn-guided-ideation",
+      "name": "引导式想法探索 (Guided Idea Exploration)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "有一个模糊的想法，希望通过AI的结构化提问，在实时预览中看着文档从无到有地构建出核心思想部分",
+        "benefit": "建立一个清晰、简洁的项目基础，避免方向性错误"
+      },
+      "requiredFunctions": [
+        "引导式对话流",
+        "核心思想模块的结构化输入",
+        "实时文档预览"
+      ],
+      "acceptanceCriteria": [
+        "系统能够通过提问引导用户完成问题陈述、目标用户和核心价值的定义，并实时更新在预览中",
+        "用户可以在任何时候回顾和修改核心思想的三个要素"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "这是所有需求工作的起点，确保了项目有一个稳固的根基。"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-collaborative-scoping",
+      "name": "协作式范围定义 (Collaborative Scope Definition)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在AI的协助下，定义并挑战项目的范围，并在预览中直观地看到范围列表的增删变化",
+        "benefit": "集中资源，专注于实现最核心的价值，有效管理项目期望"
+      },
+      "requiredFunctions": [
+        "范围定义模块 (In-Scope/Out-of-Scope)",
+        "AI范围建议与挑战功能",
+        "实时文档预览"
+      ],
+      "acceptanceCriteria": [
+        "用户可以清晰地列出范围内的核心功能和范围外的功能，并实时展示在预览中",
+        "AI能够根据核心思想，对用户添加的范围项提出建议或挑战"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "明确的范围是控制项目规模和复杂度的关键。"
+      },
+      "status": "Draft",
+      "dependencies": [
+        "scn-guided-ideation"
+      ],
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-live-preview",
+      "name": "实时同步的文档预览 (Live-Sync Document Preview)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在与AI对话的同时，在界面右侧实时看到正在生成的需求规格文档，并能直观地看到AI提出的高亮、注释和修改建议",
+        "benefit": "提供一个即时的、可视化的反馈闭环，让用户能清晰地理解需求的当前状态、存在的问题以及如何改进，极大地提升了沟通效率和文档质量"
+      },
+      "requiredFunctions": [
+        "双栏布局 (对话界面 + 文档预览)",
+        "实时Markdown渲染",
+        "内容高亮与注释功能 (用于展示冲突和建议)",
+        "数据到视图的双向绑定"
+      ],
+      "acceptanceCriteria": [
+        "当对话中确认一个新需求点时，预览区的文档应在2秒内更新",
+        "当AI检测到一致性冲突时，应在预览区对应位置高亮显示，并附有解释",
+        "用户点击高亮区域，可以查看详细的冲突说明或改进建议"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "这是产品的核心交互模型，是实现引导式写作和实时反馈的基础。"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "High"
+    },
+    {
+      "id": "scn-export-document",
+      "name": "一键导出文档 (Effortless Document Generation)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在需求澄清过程的任何阶段，一键导出当前预览的最新版本的需求规格文档",
+        "benefit": "方便地获得可用于沟通、存档或下一步开发的正式文档"
+      },
+      "requiredFunctions": [
+        "文档生成引擎",
+        "Markdown/JSON导出功能",
+        "导出按钮/命令"
+      ],
+      "acceptanceCriteria": [
+        "能够生成格式规范的Markdown文档",
+        "能够导出与内部数据结构一致的JSON文件",
+        "导出的文档内容与最终预览完全一致"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "这是需求澄清流程的最终交付物，是核心价值的体现"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "Low"
+    },
+    {
+      "id": "scn-resume-work",
+      "name": "继续未完成的工作 (Resume Work)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "重新打开一个已有的项目",
+        "benefit": "能够无缝地从上次中断的地方继续工作，并且AI会基于文档的最新状态提供全新的分析和对话"
+      },
+      "requiredFunctions": [
+        "项目文件加载机制",
+        "文档状态恢复",
+        "AI引擎的重新分析触发器"
+      ],
+      "acceptanceCriteria": [
+        "打开项目后，文档预览区会完整显示上次保存的所有内容",
+        "对话界面开启一个新的会话",
+        "AI会基于当前文档内容进行一次完整的分析，并可能在问题清单中展示新的发现"
+      ],
+      "priority": {
+        "level": "MVP",
+        "justification": "定义了核心的A2模型工作流，确保了工作的连续性和文档的持久性。"
+      },
+      "status": "Draft",
+      "dependencies": [
+        "scn-project-dashboard"
+      ],
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "scn-consistency-checking",
+      "name": "智能化一致性检查 (Intelligent Consistency-Checking)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在添加用户故事或功能点时，AI能主动在预览文档中高亮显示其与核心思想、范围的潜在冲突",
+        "benefit": "确保整个需求文档的逻辑连贯性和内部一致性，避免前后矛盾"
+      },
+      "requiredFunctions": [
+        "后台一致性分析引擎",
+        "在预览中高亮显示不一致性并附带解释",
+        "一键采纳建议的交互机制"
+      ],
+      "acceptanceCriteria": [
+        "当用户添加一个与核心价值或范围定义明显不符的用户故事时，系统应在预览中高亮警示",
+        "用户点击高亮区域，可以查看详细的冲突说明并获得修改建议",
+        "系统为每个建议提供“采纳建议”按钮，用户点击后可自动修复文档内容",
+        "用户可以选择忽略建议，高亮状态会变为“已忽略”"
+      ],
+      "priority": {
+        "level": "Later",
+        "justification": "这是提升需求质量的高级功能，可以在核心流程跑通后再实现。"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "High"
+    },
+    {
+      "id": "scn-on-demand-review",
+      "name": "按需审查与重构 (On-Demand Review & Refinement)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在任何时候请求AI对文档的某个部分进行审查，AI会将反馈和建议直接以注释或高亮的形式呈现在预览中",
+        "benefit": "克服创作过程中的困惑，并持续迭代提升需求规格的质量"
+      },
+      "requiredFunctions": [
+        "全局命令/按钮 (审查、总结)",
+        "内容质量评估与摘要生成",
+        "在预览中以注释形式展示反馈",
+        "一键采纳建议的交互机制"
+      ],
+      "acceptanceCriteria": [
+        "用户可以通过简单的指令触发对特定部分的审查功能",
+        "AI的反馈应具体、可操作，并直接呈现在文档预览的对应位置",
+        "对于AI提出的修改建议，用户可以通过点击“采纳”按钮一键应用到文档中"
+      ],
+      "priority": {
+        "level": "Later",
+        "justification": "提升用户体验和文档质量的重要功能，但优先级低于核心的创建和定义流程。"
+      },
+      "status": "Draft",
+      "estimatedComplexity": "High"
+    },
+    {
+      "id": "scn-contextual-discussion",
+      "name": "基于预览的上下文讨论 (Contextual Discussion from Preview)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "在预览文档中选中任意一段文本或一个元素，然后发起一个专门针对该上下文的对话",
+        "benefit": "能够极其高效地对文档的特定部分进行提问、质疑或提出修改建议，让沟通和修改的焦点更加明确，避免了宽泛和模糊的对话"
+      },
+      "requiredFunctions": [
+        "预览区文本/元素选择功能",
+        "上下文菜单 (e.g., '讨论此内容' 按钮)",
+        "上下文感知的对话启动器",
+        "对话与文档元素的链接机制"
+      ],
+      "acceptanceCriteria": [
+        "用户可以在预览区高亮选择文本",
+        "选择后，出现一个快捷操作按钮或菜单，如“讨论”",
+        "点击“讨论”后，对话界面会开启一个新的、与所选内容关联的对话线程",
+        "AI在回应时，能够明确知道用户正在讨论的是哪一部分内容"
+      ],
+      "priority": {
+        "level": "Later",
+        "justification": "极大提升了交互的精确性和效率，是实现深度协作的关键功能，但核心的引导式创建流程可以先不依赖它。"
+      },
+      "status": "Draft",
+      "dependencies": [
+        "scn-live-preview"
+      ],
+      "estimatedComplexity": "High"
+    },
+    {
+      "id": "scn-version-history",
+      "name": "需求演进历史追溯 (Requirement Evolution History)",
+      "story": {
+        "userType": "项目创建者",
+        "action": "查看需求文档的修改历史和决策记录",
+        "benefit": "能够理解需求为何会变成现在的样子，方便回顾关键决策，或在需要时回滚到某个历史版本"
+      },
+      "requiredFunctions": [
+        "版本历史快照查看器",
+        "决策日志(Decision Log)关联展示",
+        "版本差异对比 (Diff) 功能 (可选)"
+      ],
+      "acceptanceCriteria": [
+        "用户可以访问一个历史记录页面或面板",
+        "该页面以列表形式展示所有重大的变更(changeHistory)和决策(decisionLog)",
+        "用户可以点击一个历史条目，查看当时的文档快照",
+        "（可选）用户可以选择两个版本进行差异对比"
+      ],
+      "priority": {
+        "level": "Later",
+        "justification": "将后台的日志数据转化为用户价值，但优先级低于核心编辑和生成流程。"
+      },
+      "status": "Draft",
+      "dependencies": [
+        "decisionLog",
+        "changeHistory"
+      ],
+      "estimatedComplexity": "Medium"
+    },
+    {
+      "id": "sys-evolvable-sessions",
+      "name": "(System) 可演进的会话管理架构 ((System) Evolvable Session Management Architecture)",
+      "story": {
+        "userType": "System",
+        "action": "在设计和实现时，将持久化的文档状态与临时的会话状态（如对话历史）明确分离",
+        "benefit": "确保当前的A2架构（每次重新分析）可以平滑地演进到未来的C架构（显式会话管理），而无需重写核心代码"
+      },
+      "requiredFunctions": [
+        "模块化的会话管理器",
+        "可序列化的会话状态数据结构",
+        "清晰的状态边界定义"
+      ],
+      "acceptanceCriteria": [
+        "代码库中存在明确的SessionManager或类似模块",
+        "会话状态（对话历史、UI状态）不与文档的核心JSON模型混合存储",
+        "架构评审确认了该设计支持未来的扩展"
+      ],
+      "priority": {
+        "level": "System",
+        "justification": "这是一个架构约束，确保了产品的长期技术健康度和可扩展性。"
+      },
+      "status": "Principle",
+      "estimatedComplexity": "N/A"
+    }
+  ],
+  "interactionSessionModels": {
+    "title": "交互与会话模型说明",
+    "models": [
+      {
+        "id": "A",
+        "name": "“基于项目”的模型",
+        "description": "这是大多数 IDE 和开发工具采用的经典模型。",
+        "coreConcept": "主要组织单位是项目（Project）。每个项目对应一个独立的需求规格。用户会有一个面板或列表来查看和管理所有项目。",
+        "multiDocHandling": "每个文档都是一个独立项目，用户在它们之间显式切换。",
+        "persistence": {
+          "options": [
+            {
+              "id": "A1",
+              "title": "无缝恢复",
+              "description": "当用户关闭应用时，会话状态也被完整保存。重新打开时，应用恢复到上次的状态——完整的对话仍然活跃，AI 保留最后的上下文。"
+            },
+            {
+              "id": "A2",
+              "title": "新会话恢复",
+              "description": "只保存文档状态。用户返回时启动一个新的会话，AI 会重新分析文档生成问题清单并开始新的对话。旧的对话可以归档和查看，但不是“活的”。"
+            }
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "name": "“无状态文档”模型",
+        "description": "该模型让应用更像是一个专用编辑器（例如 Notepad++ 或 Markdown 编辑器）。",
+        "coreConcept": "没有“项目”，用户直接打开和编辑文档文件（如 .clario）。应用几乎是无状态的。",
+        "multiDocHandling": "用户可以同时在多个标签页中打开不同文档。",
+        "persistence": {
+          "description": "文档文件本身就是状态。应用不保存独立的会话状态。打开文档时，AI 从零分析；关闭文档时，除了文本一切被遗忘。"
+        }
+      },
+      {
+        "id": "C",
+        "name": "“显式会话历史”模型",
+        "description": "这是一个更高级的混合模型，允许用户显式管理会话。",
+        "coreConcept": "工作以项目为单位，但在每个项目里，用户可以管理多个不同的会话（Session）历史。",
+        "multiDocHandling": "与模型 A 相同（每个项目对应一个文档）。",
+        "persistence": {
+          "description": "类似于 Git 分支。用户可以有“初步头脑风暴”会话，也可以有“API 范围界定”会话。关闭应用后，下次打开可以选择恢复某个具体会话（连同对话与上下文），或新建会话。"
+        }
+      }
+    ]
+  },
+  "prioritization": {
+    "MVP": [
+      "scn-project-dashboard",
+      "scn-create-project",
+      "scn-guided-ideation",
+      "scn-collaborative-scoping",
+      "scn-live-preview",
+      "scn-export-document",
+      "scn-resume-work"
+    ],
+    "Later": [
+      "scn-consistency-checking",
+      "scn-on-demand-review",
+      "scn-contextual-discussion",
+      "scn-version-history"
+    ],
+    "Maybe": [],
+    "System": [
+      "sys-evolvable-sessions"
+    ]
+  },
+  "decisionLog": [
+    {
+      "date": "2024-12-19",
+      "decision": "采用多智能体协作架构，而非单一AI助手模式",
+      "reason": "不同角色的智能体可以提供专业化的服务，模拟真实团队中的角色分工，提高需求澄清的质量和全面性",
+      "rejectedOptions": [
+        "单一通用AI助手",
+        "基于规则的问答系统"
+      ],
+      "status": "Accepted",
+      "decisionType": "Feature",
+      "impact": {
+        "scope": [
+          "系统功能"
+        ],
+        "scenarios": [
+          "scn-initial-clarification",
+          "scn-requirement-analysis",
+          "scn-real-time-review"
+        ]
+      }
+    },
+    {
+      "date": "2024-12-19",
+      "decision": "聚焦轻量化需求规格文档，不涉及技术实现细节",
+      "reason": "目标用户是个人开发者和小团队，需要的是快速、低成本的需求澄清，而非复杂的技术设计",
+      "rejectedOptions": [
+        "包含技术架构设计",
+        "生成详细的API文档",
+        "包含数据库设计"
+      ],
+      "status": "Accepted",
+      "decisionType": "Scope",
+      "impact": {
+        "scope": [
+          "澄清的重点"
+        ]
+      }
+    }
+  ],
+  "changeHistory": [
+    {
+      "date": "2024-12-19",
+      "description": "创建初始项目需求规格文档，基于项目范围定义书和JSON Schema结构",
+      "related": [
+        "coreIdea",
+        "scope",
+        "scenarios",
+        "prioritization"
+      ]
+    }
+  ],
+  "nonFunctionalNotes": [
+    {
+      "category": "多智能体交互体验 (Multi-Agent UX)",
+      "note": "为凸显多智能体协作的核心价值，UI设计需明确区分不同AI角色的贡献。例如，在对话气泡或预览注释前，使用标签（如 `[审查员]` 或 `[范围规划师]`）来标识信息来源。考虑提供一个视图过滤器，允许用户只查看特定角色的反馈或查看汇总意见。"
+    },
+    {
+      "category": "性能与可靠性 (Performance & Reliability)",
+      "note": "系统的非功能性目标根据部署模式区分。",
+      "targets": [
+        {
+          "mode": "初始MVP/本地单机版 (Initial MVP/Desktop)",
+          "constraints": [
+            "系统响应时间：核心交互在5秒内完成。",
+            "数据存储：可靠性依赖于本地文件系统。",
+            "并发：主要为单用户设计。"
+          ]
+        },
+        {
+          "mode": "未来SaaS版 (Potential Future SaaS)",
+          "constraints": [
+            "系统响应时间：95%的交互在3秒内完成。",
+            "数据存储：应确保99.9%的云端可用性。",
+            "并发用户数：初始目标支持不少于100个并发会话。"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "格式标准",
+      "note": "生成的文档应符合通用的Markdown和JSON标准格式。"
+    },
+    {
+      "category": "服务稳定性",
+      "note": "对外部AI模型的调用应包含超时、重试和降级机制，确保核心服务的稳定性。"
+    }
+  ],
+  "meta": {
+    "generatedBy": [
+      "Scope Planner",
+      "Analyst",
+      "Recorder"
+    ],
+    "documentStatus": "Draft",
+    "tags": [
+      "需求澄清",
+      "多智能体",
+      "轻量化文档",
+      "个人项目",
+      "小团队协作"
+    ],
+    "reviewHistory": [
+      {
+        "date": "2024-12-19",
+        "reviewer": "Recorder",
+        "status": "Pending",
+        "comments": "初始版本创建完成，等待进一步评审和完善"
+      }
+    ]
+  }
+}

@@ -1,0 +1,329 @@
+/**
+ * Clario 设计系统 - 动画和过渡令牌
+ * 
+ * 定义动画持续时间、缓动函数和常用过渡效果
+ */
+
+:root {
+  /* ===== 动画持续时间 ===== */
+  --duration-instant: 0ms;
+  --duration-fast: 150ms;          /* 快速交互反馈 */
+  --duration-base: 200ms;          /* 默认过渡时间 */
+  --duration-medium: 300ms;        /* 中等动画 */
+  --duration-slow: 500ms;          /* 慢速动画 */
+  --duration-slower: 750ms;        /* 更慢的动画 */
+  --duration-slowest: 1000ms;      /* 最慢动画 */
+
+  /* ===== 缓动函数 ===== */
+  /* 标准缓动 */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);           /* 缓入 */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);          /* 缓出 */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);     /* 缓入缓出 */
+
+  /* 自然缓动 */
+  --ease-natural: cubic-bezier(0.25, 0.46, 0.45, 0.94);   /* 自然感觉 */
+  --ease-sharp: cubic-bezier(0.4, 0, 0.6, 1);             /* 锐利 */
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);        /* 平滑 */
+
+  /* 弹性缓动 */
+  --ease-bounce-out: cubic-bezier(0.34, 1.56, 0.64, 1);   /* 弹出效果 */
+  --ease-bounce-in: cubic-bezier(0.6, 0.04, 0.98, 0.335); /* 弹入效果 */
+
+  /* 特殊效果缓动 */
+  --ease-anticipate: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* 预期效果 */
+  --ease-overshoot: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 过冲效果 */
+
+  /* ===== 常用过渡组合 ===== */
+  /* 基础过渡 */
+  --transition-none: none;
+  --transition-all: all var(--duration-base) var(--ease-out);
+  --transition-colors: color var(--duration-base) var(--ease-out),
+                       background-color var(--duration-base) var(--ease-out),
+                       border-color var(--duration-base) var(--ease-out);
+  --transition-opacity: opacity var(--duration-base) var(--ease-out);
+  --transition-shadow: box-shadow var(--duration-base) var(--ease-out);
+  --transition-transform: transform var(--duration-base) var(--ease-out);
+
+  /* 快速过渡 */
+  --transition-fast: all var(--duration-fast) var(--ease-out);
+  --transition-colors-fast: color var(--duration-fast) var(--ease-out),
+                           background-color var(--duration-fast) var(--ease-out),
+                           border-color var(--duration-fast) var(--ease-out);
+
+  /* 慢速过渡 */
+  --transition-slow: all var(--duration-slow) var(--ease-out);
+  --transition-colors-slow: color var(--duration-slow) var(--ease-out),
+                           background-color var(--duration-slow) var(--ease-out),
+                           border-color var(--duration-slow) var(--ease-out);
+
+  /* ===== 组件专用过渡 ===== */
+  /* 按钮过渡 */
+  --transition-button: background-color var(--duration-fast) var(--ease-out),
+                      border-color var(--duration-fast) var(--ease-out),
+                      color var(--duration-fast) var(--ease-out),
+                      box-shadow var(--duration-fast) var(--ease-out),
+                      transform var(--duration-fast) var(--ease-out);
+
+  /* 输入框过渡 */
+  --transition-input: border-color var(--duration-base) var(--ease-out),
+                     box-shadow var(--duration-base) var(--ease-out);
+
+  /* 卡片过渡 */
+  --transition-card: box-shadow var(--duration-base) var(--ease-out),
+                    border-color var(--duration-base) var(--ease-out),
+                    transform var(--duration-base) var(--ease-out);
+
+  /* 模态框过渡 */
+  --transition-modal: opacity var(--duration-base) var(--ease-out),
+                     transform var(--duration-base) var(--ease-out);
+
+  /* 下拉菜单过渡 */
+  --transition-dropdown: opacity var(--duration-fast) var(--ease-out),
+                        transform var(--duration-fast) var(--ease-out);
+
+  /* ===== 关键帧动画 ===== */
+  /* 旋转动画 */
+  --animation-spin: spin var(--duration-slowest) var(--ease-linear) infinite;
+
+  /* 脉冲动画 */
+  --animation-pulse: pulse 2s var(--ease-in-out) infinite;
+
+  /* 弹跳动画 */
+  --animation-bounce: bounce var(--duration-slowest) var(--ease-bounce-out) infinite;
+
+  /* 淡入淡出 */
+  --animation-fade-in: fadeIn var(--duration-medium) var(--ease-out);
+  --animation-fade-out: fadeOut var(--duration-medium) var(--ease-out);
+
+  /* 滑入滑出 */
+  --animation-slide-in-up: slideInUp var(--duration-medium) var(--ease-out);
+  --animation-slide-in-down: slideInDown var(--duration-medium) var(--ease-out);
+  --animation-slide-in-left: slideInLeft var(--duration-medium) var(--ease-out);
+  --animation-slide-in-right: slideInRight var(--duration-medium) var(--ease-out);
+
+  /* 缩放动画 */
+  --animation-scale-in: scaleIn var(--duration-base) var(--ease-out);
+  --animation-scale-out: scaleOut var(--duration-base) var(--ease-out);
+
+  /* 摇摆动画 */
+  --animation-shake: shake var(--duration-medium) var(--ease-out);
+
+  /* 打字动画 */
+  --animation-typing: typing 1.5s var(--ease-in-out) infinite;
+}
+
+/* ===== 关键帧定义 ===== */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -1px, 0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+@keyframes typing {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+/* ===== 骨架屏动画 ===== */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+:root {
+  --animation-shimmer: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ===== 减少动画偏好支持 ===== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* 禁用所有动画和过渡 */
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-medium: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+    --duration-slowest: 0ms;
+    
+    --transition-none: none;
+    --transition-all: none;
+    --transition-colors: none;
+    --transition-opacity: none;
+    --transition-shadow: none;
+    --transition-transform: none;
+    --transition-fast: none;
+    --transition-colors-fast: none;
+    --transition-slow: none;
+    --transition-colors-slow: none;
+    
+    /* 组件过渡也禁用 */
+    --transition-button: none;
+    --transition-input: none;
+    --transition-card: none;
+    --transition-modal: none;
+    --transition-dropdown: none;
+  }
+  
+  /* 禁用所有动画 */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== 动画工具类 ===== */
+.animate-none { animation: none; }
+.animate-spin { animation: var(--animation-spin); }
+.animate-pulse { animation: var(--animation-pulse); }
+.animate-bounce { animation: var(--animation-bounce); }
+
+.animate-fade-in { animation: var(--animation-fade-in); }
+.animate-fade-out { animation: var(--animation-fade-out); }
+
+.animate-slide-in-up { animation: var(--animation-slide-in-up); }
+.animate-slide-in-down { animation: var(--animation-slide-in-down); }
+.animate-slide-in-left { animation: var(--animation-slide-in-left); }
+.animate-slide-in-right { animation: var(--animation-slide-in-right); }
+
+.animate-scale-in { animation: var(--animation-scale-in); }
+.animate-scale-out { animation: var(--animation-scale-out); }
+
+.animate-shake { animation: var(--animation-shake); }
+
+/* 过渡工具类 */
+.transition-none { transition: var(--transition-none); }
+.transition-all { transition: var(--transition-all); }
+.transition-colors { transition: var(--transition-colors); }
+.transition-opacity { transition: var(--transition-opacity); }
+.transition-shadow { transition: var(--transition-shadow); }
+.transition-transform { transition: var(--transition-transform); }
+
+/* 交互式元素的默认过渡 */
+button, input, select, textarea, a, [role="button"] {
+  transition: var(--transition-colors);
+}
+
+/* 卡片类元素的默认过渡 */
+[class*="card"], [class*="panel"] {
+  transition: var(--transition-card);
+}

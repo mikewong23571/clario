@@ -1,0 +1,132 @@
+/**
+ * Clario 设计系统 - 字体令牌
+ * 
+ * 定义完整的字体系统，包括字体族、大小、权重和行高
+ */
+
+:root {
+  /* ===== 字体族 (Font Families) ===== */
+  /* 主字体 - 无衬线字体 */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+                      'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 
+                      'Helvetica Neue', sans-serif;
+
+  /* 等宽字体 - 代码和数据 */
+  --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 
+                      'Source Code Pro', 'Consolas', monospace;
+
+  /* 衬线字体 - 装饰性文本 */
+  --font-family-serif: 'Times New Roman', Times, serif;
+
+  /* ===== 字体大小 (Font Sizes) ===== */
+  /* 基于 16px 基准的响应式字体阶梯 */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px - 基准 */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+  --font-size-5xl: 3rem;       /* 48px */
+  --font-size-6xl: 3.75rem;    /* 60px */
+
+  /* ===== 字体权重 (Font Weights) ===== */
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;   /* 默认 */
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* ===== 行高 (Line Heights) ===== */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;   /* 紧凑 */
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;   /* 默认 */
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;      /* 宽松 */
+
+  /* ===== 字母间距 (Letter Spacing) ===== */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;    /* 默认 */
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* ===== 语义化字体样式 (Semantic Typography) ===== */
+  
+  /* 标题样式 */
+  --font-heading-1: var(--font-weight-bold) var(--font-size-4xl)/var(--line-height-tight) var(--font-family-sans);
+  --font-heading-2: var(--font-weight-bold) var(--font-size-3xl)/var(--line-height-tight) var(--font-family-sans);
+  --font-heading-3: var(--font-weight-semibold) var(--font-size-2xl)/var(--line-height-snug) var(--font-family-sans);
+  --font-heading-4: var(--font-weight-semibold) var(--font-size-xl)/var(--line-height-snug) var(--font-family-sans);
+  --font-heading-5: var(--font-weight-semibold) var(--font-size-lg)/var(--line-height-snug) var(--font-family-sans);
+  --font-heading-6: var(--font-weight-medium) var(--font-size-base)/var(--line-height-normal) var(--font-family-sans);
+
+  /* 正文样式 */
+  --font-body-large: var(--font-weight-normal) var(--font-size-lg)/var(--line-height-relaxed) var(--font-family-sans);
+  --font-body: var(--font-weight-normal) var(--font-size-base)/var(--line-height-normal) var(--font-family-sans);
+  --font-body-small: var(--font-weight-normal) var(--font-size-sm)/var(--line-height-normal) var(--font-family-sans);
+
+  /* 标签和说明文字 */
+  --font-label: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family-sans);
+  --font-caption: var(--font-weight-normal) var(--font-size-xs)/var(--line-height-normal) var(--font-family-sans);
+  
+  /* 按钮文字 */
+  --font-button: var(--font-weight-medium) var(--font-size-sm)/var(--line-height-tight) var(--font-family-sans);
+  --font-button-large: var(--font-weight-medium) var(--font-size-base)/var(--line-height-tight) var(--font-family-sans);
+  
+  /* 代码文字 */
+  --font-code: var(--font-weight-normal) var(--font-size-sm)/var(--line-height-normal) var(--font-family-mono);
+  --font-code-inline: var(--font-weight-normal) var(--font-size-sm)/var(--line-height-normal) var(--font-family-mono);
+}
+
+/* ===== 响应式字体调整 ===== */
+@media screen and (max-width: 768px) {
+  :root {
+    /* 移动端稍微缩小字体 */
+    --font-size-3xl: 1.625rem;   /* 26px */
+    --font-size-4xl: 2rem;       /* 32px */
+    --font-size-5xl: 2.5rem;     /* 40px */
+    --font-size-6xl: 3rem;       /* 48px */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    /* 小屏幕进一步缩小 */
+    --font-size-2xl: 1.375rem;   /* 22px */
+    --font-size-3xl: 1.5rem;     /* 24px */
+    --font-size-4xl: 1.875rem;   /* 30px */
+  }
+}
+
+/* ===== 打印样式调整 ===== */
+@media print {
+  :root {
+    /* 打印时使用衬线字体，更适合阅读 */
+    --font-family-sans: var(--font-family-serif);
+    
+    /* 调整字体大小以适应打印 */
+    --font-size-base: 12pt;
+    --font-size-sm: 10pt;
+    --font-size-xs: 9pt;
+  }
+}
+
+/* ===== 字体加载优化 ===== */
+/* 防止字体加载时的闪烁 */
+.font-loading {
+  font-display: swap;
+}
+
+/* 字体加载完成前的回退 */
+@supports not (font-display: swap) {
+  body {
+    font-family: var(--font-family-sans);
+  }
+}

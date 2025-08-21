@@ -1,0 +1,193 @@
+/**
+ * Clario 设计系统 - 设计令牌统一导入
+ * 
+ * 这个文件导入所有设计令牌，确保在应用中可以使用所有设计变量
+ * 导入顺序很重要：基础令牌在前，组合令牌在后
+ */
+
+/* ===== 基础令牌 ===== */
+@import './colors.css';      /* 颜色系统 */
+@import './typography.css';  /* 字体系统 */
+@import './spacing.css';     /* 间距系统 */
+@import './shadows.css';     /* 阴影系统 */
+@import './borders.css';     /* 边框和圆角系统 */
+@import './motion.css';      /* 动画和过渡系统 */
+
+/**
+ * 设计令牌验证
+ * 确保所有关键变量都已定义
+ */
+:root {
+  /* 验证关键令牌是否正确加载 */
+  --design-tokens-loaded: true;
+}
+
+/* 开发环境下的令牌验证 */
+@media screen and (min-width: 0) {
+  html {
+    /* 如果任何关键令牌未定义，会在开发者工具中显示警告 */
+    --validation-primary: var(--color-primary-500, red);
+    --validation-text: var(--color-text-primary, red);
+    --validation-space: var(--space-4, red);
+    --validation-radius: var(--radius-md, red);
+  }
+}
+
+/**
+ * 令牌继承和级联
+ * 确保所有令牌都能正确继承和覆盖
+ */
+
+/* 确保所有元素都能继承设计令牌 */
+*,
+*::before,
+*::after {
+  /* 继承颜色和字体令牌 */
+  color: inherit;
+  font-family: inherit;
+}
+
+/* 为根元素设置默认值 */
+html {
+  /* 使用设计系统的字体 */
+  font-family: var(--font-family-sans);
+  /* 使用设计系统的行高 */
+  line-height: var(--line-height-normal);
+  /* 使用设计系统的字体大小 */
+  font-size: var(--font-size-base);
+  /* 使用设计系统的颜色 */
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  
+  /* 启用平滑滚动 */
+  scroll-behavior: smooth;
+  
+  /* 优化文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 确保body继承正确的样式 */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* 使用设计系统的背景色 */
+  background-color: var(--color-bg-secondary);
+}
+
+/**
+ * 设计令牌的语义化映射
+ * 创建更容易理解的语义化变量
+ */
+:root {
+  /* ===== 语义化颜色映射 ===== */
+  --color-brand: var(--color-primary-500);
+  --color-brand-hover: var(--color-primary-600);
+  --color-brand-light: var(--color-primary-100);
+  
+  --color-danger: var(--color-error-500);
+  --color-danger-hover: var(--color-error-600);
+  --color-danger-light: var(--color-error-50);
+  
+  --color-safe: var(--color-success-500);
+  --color-safe-hover: var(--color-success-600);
+  --color-safe-light: var(--color-success-50);
+  
+  --color-caution: var(--color-warning-500);
+  --color-caution-hover: var(--color-warning-600);
+  --color-caution-light: var(--color-warning-50);
+  
+  /* ===== 语义化间距映射 ===== */
+  --space-tight: var(--space-2);      /* 紧凑间距 */
+  --space-normal: var(--space-4);     /* 正常间距 */
+  --space-loose: var(--space-8);      /* 宽松间距 */
+  --space-extra-loose: var(--space-12); /* 超宽松间距 */
+  
+  /* ===== 语义化字体映射 ===== */
+  --text-display: var(--font-heading-1);     /* 展示文字 */
+  --text-title: var(--font-heading-2);       /* 标题文字 */
+  --text-subtitle: var(--font-heading-3);    /* 副标题文字 */
+  --text-body: var(--font-body);             /* 正文文字 */
+  --text-small: var(--font-body-small);      /* 小号文字 */
+  --text-caption: var(--font-caption);       /* 说明文字 */
+  
+  /* ===== 语义化圆角映射 ===== */
+  --corner-sharp: var(--radius-none);        /* 无圆角 */
+  --corner-soft: var(--radius-sm);           /* 轻微圆角 */
+  --corner-rounded: var(--radius-md);        /* 标准圆角 */
+  --corner-smooth: var(--radius-lg);         /* 平滑圆角 */
+  --corner-pill: var(--radius-full);         /* 胶囊圆角 */
+  
+  /* ===== 语义化阴影映射 ===== */
+  --depth-flat: var(--shadow-none);          /* 无深度 */
+  --depth-low: var(--shadow-sm);             /* 低深度 */
+  --depth-medium: var(--shadow-md);          /* 中等深度 */
+  --depth-high: var(--shadow-lg);            /* 高深度 */
+  --depth-highest: var(--shadow-2xl);        /* 最高深度 */
+}
+
+/**
+ * 调试和开发辅助
+ * 仅在开发环境中启用
+ */
+@media screen and (min-width: 0) {
+  /* 设计令牌调试器 */
+  [data-debug-tokens="true"] {
+    position: relative;
+  }
+  
+  [data-debug-tokens="true"]::before {
+    content: "🎨 Design tokens active";
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: var(--color-primary-500);
+    color: white;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+}
+
+/**
+ * 主题切换支持
+ * 为未来的主题切换功能预留
+ */
+
+/* 主题过渡效果 */
+:root {
+  transition: 
+    color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out);
+}
+
+/* 主题切换时的平滑过渡 */
+* {
+  transition-property: color, background-color, border-color, fill, stroke;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-out);
+}
+
+/* 避免某些元素的过渡 */
+input, textarea, select {
+  transition: var(--transition-input);
+}
+
+/* 
+ * 导出验证
+ * 确保所有令牌都可以被 JavaScript 访问
+ */
+:export {
+  /* 这些变量可以被 CSS Modules 或 JS 访问 */
+  primaryColor: var(--color-primary-500);
+  textColor: var(--color-text-primary);
+  backgroundColor: var(--color-bg-primary);
+  borderRadius: var(--radius-md);
+  spacing: var(--space-4);
+  shadow: var(--shadow-md);
+}

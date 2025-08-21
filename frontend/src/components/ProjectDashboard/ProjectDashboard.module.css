@@ -1,0 +1,297 @@
+/**
+ * ProjectDashboard 组件样式
+ * 基于 Clario 设计系统重构，移除所有硬编码样式
+ */
+
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+
+/* ===== 头部区域 ===== */
+.header {
+  margin-bottom: var(--space-8);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-8);
+  gap: var(--space-8);
+}
+
+.headerContent h1 {
+  font: var(--font-heading-2);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.headerSubtitle {
+  color: var(--color-text-secondary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font: var(--font-body-base);
+}
+
+.projectCount {
+  font: var(--font-body-small);
+  color: var(--color-text-secondary);
+  background: var(--color-gray-100);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+}
+
+.createButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-button);
+  font: var(--font-button);
+  transition: var(--transition-button);
+  cursor: pointer;
+  border: none;
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+}
+
+.createButton:hover:not(:disabled) {
+  background: var(--color-primary-600);
+  transform: var(--transform-button-hover);
+}
+
+.createButton:active:not(:disabled) {
+  transform: var(--transform-button-active);
+}
+
+.createButton:disabled {
+  background: var(--color-gray-400);
+  color: var(--color-gray-600);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.createButtonIcon {
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
+/* ===== 内容区域 ===== */
+.content {
+  min-height: 400px;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--space-6);
+}
+
+/* ===== 状态组件样式 ===== */
+.stateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+  min-height: 400px;
+}
+
+.stateIcon {
+  width: 64px;
+  height: 64px;
+  color: var(--color-gray-400);
+  margin-bottom: var(--space-6);
+}
+
+.stateTitle {
+  font: var(--font-heading-4);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.stateDescription {
+  font: var(--font-body-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-6) 0;
+  max-width: 400px;
+  line-height: var(--line-height-normal);
+}
+
+.stateButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-button);
+  font: var(--font-button);
+  transition: var(--transition-button);
+  cursor: pointer;
+  border: var(--border-button-secondary);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.stateButton:hover {
+  background: var(--color-gray-50);
+  border-color: var(--color-border-secondary);
+}
+
+.stateButtonIcon {
+  width: var(--space-4);
+  height: var(--space-4);
+}
+
+/* 错误状态特殊样式 */
+.errorState .stateIcon {
+  color: var(--color-error-400);
+}
+
+.errorState .stateTitle {
+  color: var(--color-error-700);
+}
+
+/* ===== 加载状态 ===== */
+.loadingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--space-6);
+}
+
+.loadingCard {
+  background: var(--color-bg-primary);
+  border: var(--border-card);
+  border-radius: var(--radius-card);
+  padding: var(--space-6);
+  animation: var(--animation-pulse);
+}
+
+.loadingCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+}
+
+.loadingCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skeleton {
+  background: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  animation: var(--animation-shimmer);
+}
+
+.skeleton--title {
+  height: var(--space-6);
+  width: 60%;
+}
+
+.skeleton--badge {
+  height: var(--space-5);
+  width: var(--space-16);
+  border-radius: var(--radius-full);
+}
+
+.skeleton--text {
+  height: var(--space-4);
+  width: 100%;
+}
+
+.skeleton--textShort {
+  width: 70%;
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: var(--space-4);
+  }
+
+  .headerTop {
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: stretch;
+  }
+
+  .projectGrid,
+  .loadingGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .stateContainer {
+    padding: var(--space-8) var(--space-4);
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerContent h1 {
+    font: var(--font-heading-3);
+  }
+
+  .headerSubtitle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .createButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ===== 深色主题适配 ===== */
+[data-theme="dark"] .projectCount {
+  background: var(--color-gray-800);
+  color: var(--color-gray-300);
+}
+
+[data-theme="dark"] .skeleton {
+  background: var(--color-gray-700);
+}
+
+[data-theme="dark"] .loadingCard {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-primary);
+}
+
+/* ===== 无障碍支持 ===== */
+@media (prefers-reduced-motion: reduce) {
+  .createButton,
+  .stateButton,
+  .skeleton,
+  .loadingCard {
+    animation: none;
+    transition: none;
+  }
+
+  .createButton:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* ===== 高对比度支持 ===== */
+@media (prefers-contrast: high) {
+  .createButton {
+    border: var(--border-width-2) solid var(--color-primary-700);
+  }
+
+  .stateButton {
+    border-width: var(--border-width-2);
+  }
+
+  .loadingCard {
+    border-width: var(--border-width-2);
+  }
+}

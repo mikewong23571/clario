@@ -1,0 +1,315 @@
+/**
+ * SearchBar 组件样式
+ * 基于 Clario 设计系统，使用设计令牌替代硬编码样式
+ */
+
+.searchBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--color-bg-primary);
+  border: var(--border-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* ===== 搜索输入区域 ===== */
+.searchSection {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInputWrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-12);
+  font: var(--font-body-medium);
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  border: var(--border-input);
+  border-radius: var(--radius-input);
+  transition: var(--transition-input);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.searchInput:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-focus);
+  background: var(--color-bg-primary);
+}
+
+.searchInput:hover:not(:focus) {
+  border-color: var(--color-border-hover);
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+  width: var(--space-4);
+  height: var(--space-4);
+  z-index: 1;
+}
+
+.searchInput:focus + .searchIcon {
+  color: var(--color-primary-500);
+}
+
+.loadingSpinner {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-primary-500);
+  animation: var(--animation-spin);
+  width: var(--space-4);
+  height: var(--space-4);
+}
+
+/* ===== 过滤器区域 ===== */
+.searchContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.filtersContainer {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.select {
+  padding: var(--space-2) var(--space-3);
+  font: var(--font-body-small);
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  border: var(--border-input);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: var(--transition-input);
+  outline: none;
+}
+
+.select:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: var(--shadow-focus);
+}
+
+.select:hover:not(:focus) {
+  border-color: var(--color-border-hover);
+}
+
+.select.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loadingContainer {
+  position: absolute;
+  right: var(--space-3);
+  display: flex;
+  align-items: center;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== 清除过滤器按钮 ===== */
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font: var(--font-label-small);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: var(--border-input);
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: var(--transition-button);
+  outline: none;
+}
+
+.clearButton:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-hover);
+  border-color: var(--color-border-hover);
+}
+
+.clearButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.clearButton:active {
+  transform: var(--transform-button-active);
+  transition: var(--transition-fast);
+}
+
+.clearButton.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--color-gray-100);
+  color: var(--color-gray-400);
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 768px) {
+  .searchBar {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+  
+  .filtersSection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+  
+  .filterGroup {
+    justify-content: space-between;
+  }
+  
+  .filterSelect {
+    min-width: auto;
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchInput {
+    padding-left: var(--space-10);
+    font: var(--font-body-small);
+  }
+  
+  .filterGroup {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+  }
+  
+  .filterLabel {
+    font: var(--font-label-small);
+  }
+}
+
+/* ===== 深色主题适配 ===== */
+[data-theme="dark"] .searchBar {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border-primary);
+}
+
+[data-theme="dark"] .searchInput,
+[data-theme="dark"] .filterSelect {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border-secondary);
+}
+
+[data-theme="dark"] .searchInput:focus,
+[data-theme="dark"] .filterSelect:focus {
+  background: var(--color-bg-primary);
+}
+
+/* ===== 无障碍支持 ===== */
+@media (prefers-reduced-motion: reduce) {
+  .searchInput,
+  .filterSelect,
+  .clearFiltersButton,
+  .loadingSpinner {
+    transition: none;
+    animation: none;
+  }
+  
+  .clearFiltersButton:active {
+    transform: none;
+  }
+}
+
+/* ===== 高对比度支持 ===== */
+@media (prefers-contrast: high) {
+  .searchInput,
+  .filterSelect,
+  .clearFiltersButton {
+    border-width: var(--border-width-2);
+  }
+  
+  .searchInput:focus,
+  .filterSelect:focus {
+    border-width: var(--border-width-3);
+  }
+}
+
+/* ===== 触摸设备优化 ===== */
+@media (hover: none) {
+  .searchInput,
+  .filterSelect,
+  .clearFiltersButton {
+    min-height: 44px; /* 触摸友好的最小高度 */
+  }
+  
+  .clearFiltersButton:hover {
+    background: transparent;
+    color: var(--color-text-secondary);
+  }
+  
+  .clearFiltersButton:active {
+    background: var(--color-bg-active);
+    color: var(--color-text-primary);
+  }
+}
+
+/* ===== 打印样式 ===== */
+@media print {
+  .searchBar {
+    border: var(--border-width-1) solid var(--color-gray-400);
+    box-shadow: none;
+  }
+  
+  .loadingSpinner {
+    display: none;
+  }
+  
+  .clearFiltersButton {
+    display: none;
+  }
+}
+
+/* ===== 状态变体 ===== */
+.searchBar--compact {
+  padding: var(--space-4);
+  gap: var(--space-2);
+}
+
+.searchBar--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.searchInput--error {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 1px var(--color-error-500);
+}
+
+.searchInput--error:focus {
+  border-color: var(--color-error-600);
+  box-shadow: var(--shadow-error-focus);
+}

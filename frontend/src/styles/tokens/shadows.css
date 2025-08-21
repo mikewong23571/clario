@@ -1,0 +1,183 @@
+/**
+ * Clario 设计系统 - 阴影令牌
+ * 
+ * 定义完整的阴影系统，用于创建层次感和深度
+ */
+
+:root {
+  /* ===== 基础阴影层级 ===== */
+  /* 从最轻微到最强烈的阴影效果 */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* ===== 特殊阴影效果 ===== */
+  /* 内阴影 */
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --shadow-inner-md: inset 0 4px 8px 0 rgb(0 0 0 / 0.1);
+
+  /* 焦点阴影 */
+  --shadow-focus: 0 0 0 3px rgb(59 130 246 / 0.15);
+  --shadow-focus-error: 0 0 0 3px rgb(239 68 68 / 0.15);
+  --shadow-focus-success: 0 0 0 3px rgb(34 197 94 / 0.15);
+  --shadow-focus-warning: 0 0 0 3px rgb(245 158 11 / 0.15);
+
+  /* 彩色阴影 */
+  --shadow-primary: 0 4px 14px 0 rgb(59 130 246 / 0.25);
+  --shadow-primary-lg: 0 10px 25px -3px rgb(59 130 246 / 0.3);
+  --shadow-success: 0 4px 14px 0 rgb(34 197 94 / 0.25);
+  --shadow-error: 0 4px 14px 0 rgb(239 68 68 / 0.25);
+  --shadow-warning: 0 4px 14px 0 rgb(245 158 11 / 0.25);
+
+  /* ===== 组件阴影 (语义化) ===== */
+  
+  /* 卡片阴影 */
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+  --shadow-card-active: var(--shadow-base);
+  --shadow-card-elevated: var(--shadow-lg);
+
+  /* 按钮阴影 */
+  --shadow-button: var(--shadow-sm);
+  --shadow-button-hover: var(--shadow-md);
+  --shadow-button-active: var(--shadow-xs);
+  --shadow-button-primary: var(--shadow-primary);
+
+  /* 下拉菜单阴影 */
+  --shadow-dropdown: var(--shadow-lg);
+  --shadow-dropdown-lg: var(--shadow-xl);
+
+  /* 模态框阴影 */
+  --shadow-modal: var(--shadow-2xl);
+  --shadow-modal-backdrop: 0 0 0 9999px rgb(0 0 0 / 0.5);
+
+  /* 工具提示阴影 */
+  --shadow-tooltip: var(--shadow-md);
+
+  /* 弹出层阴影 */
+  --shadow-popover: var(--shadow-lg);
+  --shadow-popover-lg: var(--shadow-xl);
+
+  /* 表单元素阴影 */
+  --shadow-input: var(--shadow-xs);
+  --shadow-input-focus: var(--shadow-focus);
+
+  /* 导航阴影 */
+  --shadow-navbar: var(--shadow-sm);
+  --shadow-sidebar: var(--shadow-md);
+
+  /* ===== 交互状态阴影 ===== */
+  
+  /* 悬停状态 */
+  --shadow-hover-subtle: var(--shadow-md);
+  --shadow-hover-medium: var(--shadow-lg);
+  --shadow-hover-strong: var(--shadow-xl);
+
+  /* 激活状态 */
+  --shadow-active-subtle: var(--shadow-xs);
+  --shadow-active-medium: var(--shadow-sm);
+
+  /* 禁用状态 */
+  --shadow-disabled: none;
+}
+
+/* ===== 深色主题阴影调整 ===== */
+[data-theme="dark"] {
+  /* 深色主题下的阴影需要更强烈 */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-base: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+
+  /* 内阴影调整 */
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.15);
+  --shadow-inner-md: inset 0 4px 8px 0 rgb(0 0 0 / 0.25);
+
+  /* 模态框背景 */
+  --shadow-modal-backdrop: 0 0 0 9999px rgb(0 0 0 / 0.7);
+}
+
+/* ===== 减少动画偏好 ===== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* 保持阴影但移除动画过渡 */
+    --shadow-transition: none;
+  }
+}
+
+/* ===== 阴影动画过渡 ===== */
+:root {
+  /* 阴影过渡效果 */
+  --shadow-transition: box-shadow 0.2s ease-out;
+  --shadow-transition-fast: box-shadow 0.15s ease-out;
+  --shadow-transition-slow: box-shadow 0.3s ease-out;
+}
+
+/* ===== 阴影工具类 ===== */
+.shadow-none { box-shadow: var(--shadow-none); }
+.shadow-xs { box-shadow: var(--shadow-xs); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow { box-shadow: var(--shadow-base); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+.shadow-2xl { box-shadow: var(--shadow-2xl); }
+.shadow-inner { box-shadow: var(--shadow-inner); }
+
+/* 交互式阴影 */
+.shadow-interactive {
+  box-shadow: var(--shadow-sm);
+  transition: var(--shadow-transition);
+}
+
+.shadow-interactive:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-interactive:active {
+  box-shadow: var(--shadow-xs);
+}
+
+/* 焦点阴影 */
+.shadow-focus:focus {
+  box-shadow: var(--shadow-focus);
+}
+
+.shadow-focus-error:focus {
+  box-shadow: var(--shadow-focus-error);
+}
+
+.shadow-focus-success:focus {
+  box-shadow: var(--shadow-focus-success);
+}
+
+.shadow-focus-warning:focus {
+  box-shadow: var(--shadow-focus-warning);
+}
+
+/* ===== 特定场景阴影组合 ===== */
+:root {
+  /* 浮动操作按钮 */
+  --shadow-fab: var(--shadow-lg);
+  --shadow-fab-hover: var(--shadow-xl);
+
+  /* 粘性元素 */
+  --shadow-sticky: var(--shadow-sm);
+  
+  /* 拖拽中的元素 */
+  --shadow-dragging: var(--shadow-2xl);
+  
+  /* 加载中的卡片 */
+  --shadow-loading: var(--shadow-xs);
+  
+  /* 错误状态 */
+  --shadow-error-glow: var(--shadow-error);
+}

@@ -1,0 +1,196 @@
+/**
+ * Clario 设计系统 - 边框和圆角令牌
+ * 
+ * 定义边框宽度、样式和圆角半径
+ */
+
+:root {
+  /* ===== 边框宽度 ===== */
+  --border-width-0: 0;
+  --border-width-1: 1px;           /* 默认边框 */
+  --border-width-2: 2px;           /* 加重边框 */
+  --border-width-4: 4px;           /* 强调边框 */
+  --border-width-8: 8px;           /* 装饰性边框 */
+
+  /* ===== 圆角半径 ===== */
+  --radius-none: 0;
+  --radius-xs: 0.125rem;           /* 2px */
+  --radius-sm: 0.25rem;            /* 4px */
+  --radius-base: 0.375rem;         /* 6px */
+  --radius-md: 0.5rem;             /* 8px */
+  --radius-lg: 0.75rem;            /* 12px */
+  --radius-xl: 1rem;               /* 16px */
+  --radius-2xl: 1.5rem;            /* 24px */
+  --radius-3xl: 2rem;              /* 32px */
+  --radius-full: 9999px;           /* 完全圆角 */
+
+  /* ===== 语义化圆角 ===== */
+  /* 按钮圆角 */
+  --radius-button-sm: var(--radius-sm);
+  --radius-button: var(--radius-md);
+  --radius-button-lg: var(--radius-lg);
+  --radius-button-full: var(--radius-full);
+
+  /* 输入框圆角 */
+  --radius-input: var(--radius-md);
+  --radius-input-sm: var(--radius-sm);
+  --radius-input-lg: var(--radius-lg);
+
+  /* 卡片圆角 */
+  --radius-card: var(--radius-lg);
+  --radius-card-sm: var(--radius-md);
+  --radius-card-lg: var(--radius-xl);
+
+  /* 标签圆角 */
+  --radius-badge: var(--radius-full);
+  --radius-badge-sm: var(--radius-sm);
+
+  /* 模态框圆角 */
+  --radius-modal: var(--radius-xl);
+  --radius-modal-sm: var(--radius-lg);
+
+  /* 下拉菜单圆角 */
+  --radius-dropdown: var(--radius-lg);
+  
+  /* 工具提示圆角 */
+  --radius-tooltip: var(--radius-md);
+
+  /* 图片圆角 */
+  --radius-avatar: var(--radius-full);
+  --radius-image: var(--radius-md);
+  --radius-image-sm: var(--radius-sm);
+  --radius-image-lg: var(--radius-lg);
+
+  /* ===== 边框样式 ===== */
+  --border-style-solid: solid;
+  --border-style-dashed: dashed;
+  --border-style-dotted: dotted;
+  --border-style-none: none;
+
+  /* ===== 语义化边框组合 ===== */
+  /* 默认边框 */
+  --border-default: var(--border-width-1) var(--border-style-solid) var(--color-border-primary);
+  --border-secondary: var(--border-width-1) var(--border-style-solid) var(--color-border-secondary);
+  --border-tertiary: var(--border-width-1) var(--border-style-solid) var(--color-border-tertiary);
+
+  /* 状态边框 */
+  --border-focus: var(--border-width-2) var(--border-style-solid) var(--color-border-focus);
+  --border-error: var(--border-width-1) var(--border-style-solid) var(--color-border-error);
+  --border-success: var(--border-width-1) var(--border-style-solid) var(--color-border-success);
+  --border-warning: var(--border-width-1) var(--border-style-solid) var(--color-border-warning);
+
+  /* 虚线边框 */
+  --border-dashed: var(--border-width-1) var(--border-style-dashed) var(--color-border-secondary);
+  --border-dotted: var(--border-width-1) var(--border-style-dotted) var(--color-border-secondary);
+
+  /* 加重边框 */
+  --border-thick: var(--border-width-2) var(--border-style-solid) var(--color-border-primary);
+  --border-thick-focus: var(--border-width-2) var(--border-style-solid) var(--color-border-focus);
+
+  /* ===== 组件专用边框 ===== */
+  /* 按钮边框 */
+  --border-button-primary: var(--border-width-1) var(--border-style-solid) var(--color-primary-500);
+  --border-button-secondary: var(--border-width-1) var(--border-style-solid) var(--color-border-primary);
+  --border-button-ghost: var(--border-width-1) var(--border-style-solid) transparent;
+
+  /* 输入框边框 */
+  --border-input: var(--border-width-1) var(--border-style-solid) var(--color-border-primary);
+  --border-input-focus: var(--border-width-2) var(--border-style-solid) var(--color-border-focus);
+  --border-input-error: var(--border-width-1) var(--border-style-solid) var(--color-border-error);
+
+  /* 卡片边框 */
+  --border-card: var(--border-width-1) var(--border-style-solid) var(--color-border-primary);
+  --border-card-hover: var(--border-width-1) var(--border-style-solid) var(--color-border-secondary);
+  --border-card-active: var(--border-width-2) var(--border-style-solid) var(--color-border-focus);
+
+  /* 分割线边框 */
+  --border-divider: var(--border-width-1) var(--border-style-solid) var(--color-border-primary);
+  --border-divider-thick: var(--border-width-2) var(--border-style-solid) var(--color-border-secondary);
+
+  /* ===== 边框过渡效果 ===== */
+  --border-transition: border-color 0.2s ease-out, border-width 0.2s ease-out;
+  --border-transition-fast: border-color 0.15s ease-out;
+  --border-transition-slow: border-color 0.3s ease-out;
+
+  /* ===== 轮廓样式 (Outline) ===== */
+  --outline-none: none;
+  --outline-focus: 2px solid var(--color-border-focus);
+  --outline-focus-error: 2px solid var(--color-border-error);
+  --outline-focus-success: 2px solid var(--color-border-success);
+  --outline-focus-warning: 2px solid var(--color-border-warning);
+  --outline-offset: 2px;
+  --outline-offset-sm: 1px;
+}
+
+/* ===== 响应式圆角调整 ===== */
+@media screen and (max-width: 480px) {
+  :root {
+    /* 小屏幕适当减小圆角 */
+    --radius-card: var(--radius-md);
+    --radius-modal: var(--radius-lg);
+    --radius-button-lg: var(--radius-md);
+  }
+}
+
+/* ===== 深色主题边框调整 ===== */
+[data-theme="dark"] {
+  /* 深色主题下边框颜色会在 colors.css 中定义，这里不需要调整 */
+}
+
+/* ===== 边框工具类 ===== */
+
+/* 边框宽度 */
+.border-0 { border-width: var(--border-width-0); }
+.border { border-width: var(--border-width-1); }
+.border-2 { border-width: var(--border-width-2); }
+.border-4 { border-width: var(--border-width-4); }
+.border-8 { border-width: var(--border-width-8); }
+
+/* 单边边框 */
+.border-t { border-top-width: var(--border-width-1); }
+.border-r { border-right-width: var(--border-width-1); }
+.border-b { border-bottom-width: var(--border-width-1); }
+.border-l { border-left-width: var(--border-width-1); }
+
+/* 边框样式 */
+.border-solid { border-style: var(--border-style-solid); }
+.border-dashed { border-style: var(--border-style-dashed); }
+.border-dotted { border-style: var(--border-style-dotted); }
+.border-none { border-style: var(--border-style-none); }
+
+/* 圆角 */
+.rounded-none { border-radius: var(--radius-none); }
+.rounded-xs { border-radius: var(--radius-xs); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded { border-radius: var(--radius-base); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-3xl { border-radius: var(--radius-3xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* 单角圆角 */
+.rounded-t-none { border-top-left-radius: var(--radius-none); border-top-right-radius: var(--radius-none); }
+.rounded-t-sm { border-top-left-radius: var(--radius-sm); border-top-right-radius: var(--radius-sm); }
+.rounded-t { border-top-left-radius: var(--radius-base); border-top-right-radius: var(--radius-base); }
+.rounded-t-md { border-top-left-radius: var(--radius-md); border-top-right-radius: var(--radius-md); }
+.rounded-t-lg { border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg); }
+
+.rounded-b-none { border-bottom-left-radius: var(--radius-none); border-bottom-right-radius: var(--radius-none); }
+.rounded-b-sm { border-bottom-left-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); }
+.rounded-b { border-bottom-left-radius: var(--radius-base); border-bottom-right-radius: var(--radius-base); }
+.rounded-b-md { border-bottom-left-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
+.rounded-b-lg { border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); }
+
+.rounded-l-none { border-top-left-radius: var(--radius-none); border-bottom-left-radius: var(--radius-none); }
+.rounded-l-sm { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); }
+.rounded-l { border-top-left-radius: var(--radius-base); border-bottom-left-radius: var(--radius-base); }
+.rounded-l-md { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); }
+.rounded-l-lg { border-top-left-radius: var(--radius-lg); border-bottom-left-radius: var(--radius-lg); }
+
+.rounded-r-none { border-top-right-radius: var(--radius-none); border-bottom-right-radius: var(--radius-none); }
+.rounded-r-sm { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); }
+.rounded-r { border-top-right-radius: var(--radius-base); border-bottom-right-radius: var(--radius-base); }
+.rounded-r-md { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
+.rounded-r-lg { border-top-right-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); }

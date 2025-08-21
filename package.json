@@ -1,0 +1,20 @@
+{
+  "name": "clario-root",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.6.0",
+  "scripts": {
+    "-": "Root scripts",
+    "frontend": "pnpm -C frontend dev",
+    "test:fe": "pnpm -C frontend test",
+    "test:fe:watch": "pnpm -C frontend test:watch",
+    "e2e:fe": "pnpm -C frontend e2e",
+    "lint:fe": "pnpm -C frontend lint",
+    "lint:fe:fix": "pnpm -C frontend lint:fix",
+    "format:fe": "pnpm -C frontend format",
+    "format:fe:check": "pnpm -C frontend format:check"
+  },
+  "devDependencies": {
+    "pnpm": "^9.6.0"
+  }
+}

@@ -74,10 +74,18 @@ pnpm format        # Prettier format
 pnpm format:check  # Prettier check
 ```
 
+**Design System Validation:**
+```bash
+pnpm validate-design              # Validate design system usage
+pnpm validate-design:watch        # Watch mode validation
+pnpm validate-design:fix          # Auto-fix some design issues
+pnpm dev:validate                 # Development with validation
+```
+
 **Development:**
 ```bash
 pnpm dev           # Start development server (port 5173)
-pnpm build         # Build for production
+pnpm build         # Build for production (includes design validation)
 ```
 
 ### Root Level Commands
@@ -102,7 +110,11 @@ pnpm e2e:fe        # Frontend E2E tests
 ### Frontend Structure
 - **`src/App.tsx`**: Main React application component
 - **`src/main.tsx`**: Application entry point
+- **`src/components/ui/`**: Design system component library (Button, Card, etc.)
+- **`src/styles/tokens/`**: Design system CSS tokens (colors, typography, spacing, etc.)
+- **`src/tools/design-validator.ts`**: Browser-based design system validation
 - **`tests/e2e/`**: Playwright end-to-end tests
+- **`scripts/`**: Build and validation automation scripts
 - **Configuration**: Vite, TypeScript strict mode, ESLint + Prettier integration
 
 ### Key Schema & Models
@@ -145,6 +157,25 @@ The system implements multiple AI agent roles:
 - **Prettier**: Consistent formatting (trailing commas, semicolons)
 - **TypeScript**: Strict mode enabled
 
+## Design System Standards
+
+### CSS Architecture
+- **CSS Modules**: All component styles use CSS Modules for scoping
+- **Design Tokens**: CSS custom properties for colors, spacing, typography, etc.
+- **Token Structure**: Hierarchical token system (primitive → semantic → component)
+- **No Hardcoded Values**: All styling must use design tokens
+
+### Design System Components
+- **Button**: Complete button component with variants and states
+- **Card**: Flexible card system with sub-components
+- **UI Library**: Located in `src/components/ui/` with TypeScript + CSS Modules
+
+### Validation & Quality
+- **Real-time Validation**: Browser-based design system compliance checking
+- **Build-time Validation**: Pre-build design system validation (blocks builds on violations)
+- **Git Hooks**: Pre-commit validation prevents hardcoded styles
+- **VSCode Integration**: Editor warnings for design system violations
+
 ## Development Workflow
 
 ### Session Models
@@ -158,6 +189,8 @@ Currently implements **Model A2** (New Session Resume):
 - Frontend uses `camelCase` for TypeScript/React conventions
 - JSON schema fields use `camelCase` with Pydantic alias support
 - Test files prefixed with `test_` (backend) or `.test.ts` (frontend)
+- Component styles use `ComponentName.module.css` pattern
+- Design tokens organized by category in `src/styles/tokens/`
 
 ## Important Notes
 
@@ -176,6 +209,22 @@ Backend pre-configured for frontend development server at `http://localhost:5173
 ### Schema Validation
 All data models strictly follow `meta-doc/spec.schema.json`. Backend uses Pydantic for runtime validation, frontend planned for Ajv/zod integration.
 
+### Design System Compliance
+- **Mandatory Token Usage**: All frontend components must use design tokens from `src/styles/tokens/`
+- **No Hardcoded Styles**: Inline styles and hardcoded CSS values are prohibited
+- **Validation Required**: Run `pnpm validate-design` before committing
+- **Build Integration**: Design system validation runs automatically during build process
+- **Component Standards**: Use provided UI components from `src/components/ui/` or create new ones following the same patterns
+
 ## Business Context
 
 This project targets individual developers and 2-5 person teams working on 1-6 month projects with 20-30 main features. It focuses on requirement clarification rather than technical implementation details, project management, or UI/prototype generation.
+
+## Key Documentation
+
+- **`docs/design-system.md`**: Complete design system specification and component library
+- **`docs/ui-interaction-guide.md`**: UI interaction patterns and animation guidelines
+- **`docs/css-architecture-guide.md`**: CSS architecture and implementation patterns
+- **`docs/phase1-development-plan-updated.md`**: Development plan with integrated design system requirements
+- **`docs/minimum-feedback-loop-validation.md`**: Design system validation workflow and best practices
+- **`docs/tech-design.md`**: Technical architecture and multi-agent system design

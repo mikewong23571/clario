@@ -1,7 +1,9 @@
-# Phase 1 MVP 开发计划
+# Phase 1 MVP 开发计划 (视觉设计整合版)
 
-**文档版本**: 1.0.0  
+**文档版本**: 1.2.0  
 **创建日期**: 2025-08-21  
+**更新日期**: 2025-08-21  
+**设计系统版本**: 1.0.0  
 **目标用户**: 初级/中级工程师
 
 ## 📋 总览
@@ -11,6 +13,33 @@ Phase 1 目标：实现 MVP 核心场景，支持基本的项目管理和 AI 引
 **持续时间**: 4-6 周  
 **团队配置**: 2-3 名工程师（1前端 + 1后端 + 1全栈）  
 **核心交付物**: 可演示的端到端用户旅程
+
+## 🎨 **新增：设计规范整合**
+
+在开始任何开发任务前，团队需要先了解和应用以下设计规范：
+
+### 必读设计文档
+- 📚 `docs/design-system.md` - 完整设计系统和组件规范
+- 🖱️ `docs/ui-interaction-guide.md` - 交互设计和动画规范  
+- 🏗️ `docs/css-architecture-guide.md` - CSS 架构和实现指南
+
+### 设计令牌使用
+**所有前端组件必须使用设计令牌**，禁止硬编码样式值：
+```css
+/* ❌ 错误的硬编码方式 */
+.button {
+  background: #3b82f6;
+  padding: 12px 24px;
+  border-radius: 8px;
+}
+
+/* ✅ 正确的令牌使用方式 */
+.button {
+  background: var(--color-primary-500);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+}
+```
 
 ---
 
@@ -29,7 +58,7 @@ pnpm exec playwright install chromium  # 首次安装
 
 # 验证环境
 cd backend && uv run pytest -q
-cd frontend && pnpm test
+cd frontend && pnpm test && pnpm validate-design
 ```
 
 ### 开发服务启动
@@ -38,559 +67,400 @@ cd frontend && pnpm test
 cd backend
 uv run uvicorn app.main:app --reload --port 8000
 
-# Terminal 2: 前端服务
+# Terminal 2: 前端服务 (带设计验证)
 cd frontend  
-pnpm dev  # 启动在 http://localhost:5173
+pnpm dev:validate  # 启动在 http://localhost:5173 并启用设计系统验证
+```
+
+### **新增：设计系统开发环境**
+```bash
+# 设计系统验证和自动修复
+cd frontend
+pnpm validate-design              # 验证设计系统使用
+pnpm validate-design:watch        # 监视模式验证  
+pnpm validate-design:fix          # 自动修复部分问题
+
+# 设计系统集成测试
+node scripts/test-design-system-integration.js
+
+# 设计系统环境初始化 (首次运行)
+node scripts/setup-design-system-validation.js
 ```
 
 ---
 
 ## 🎯 Sprint 任务分解
 
-### Sprint 1: 项目管理基础 (1 周)
+### Sprint 1: 项目管理基础 + 设计系统建立 (1.5 周)
 
-#### 任务 1.1: 前端项目仪表盘组件 `scn-project-dashboard`
-**负责人**: 前端工程师  
-**预估工作量**: 3 天
-
-**任务描述**:
-创建项目列表页面，展示用户的所有项目，支持搜索和基本操作。
-
-**具体要求**:
-1. 创建 `ProjectDashboard` React 组件
-2. 集成现有的项目列表 API (`GET /projects`)
-3. 实现项目卡片展示（名称、更新时间、状态）
-4. 添加搜索/过滤功能
-5. "创建新项目"按钮
-
-**文件清单**:
-```
-frontend/src/
-├── components/
-│   ├── ProjectDashboard.tsx      # 主仪表盘组件
-│   ├── ProjectCard.tsx           # 项目卡片组件
-│   └── SearchBar.tsx             # 搜索栏组件
-├── hooks/
-│   └── useProjects.ts            # 项目数据获取 hook
-└── types/
-    └── project.ts                # 项目类型定义
-```
-
-**技术要求**:
-- 使用 TanStack Query 进行服务端状态管理
-- 组件必须支持 loading 和 error 状态
-- 使用 TypeScript 严格模式
-- 所有用户交互有 loading 反馈
-
-**验收标准**:
-- [ ] 页面正确显示项目列表
-- [ ] 搜索功能正常工作（按项目名称）
-- [ ] 点击项目卡片可以导航到项目详情页（暂时显示404即可）
-- [ ] "创建新项目"按钮存在且有点击反馈
-- [ ] 组件测试覆盖率 ≥80%
-- [ ] 支持空状态和错误状态展示
-- [ ] 通过 `pnpm lint` 和 `pnpm format:check`
-- [ ] 在3种不同屏幕尺寸下展示正常
-
-**测试要求**:
-```typescript
-// frontend/src/components/ProjectDashboard.test.tsx
-describe('ProjectDashboard', () => {
-  it('renders project list correctly')
-  it('handles search functionality')  
-  it('shows loading state while fetching')
-  it('handles error state gracefully')
-  it('navigates to project on card click')
-})
-```
-
----
-
-#### 任务 1.2: 前端项目创建对话框 `scn-create-project`
+#### **新任务 1.0: 设计系统基础建设**
 **负责人**: 前端工程师  
 **预估工作量**: 2 天
 
 **任务描述**:
-实现创建新项目的模态对话框，收集项目基本信息并调用 API 创建项目。
+建立 Clario 设计系统的基础架构，创建设计令牌和核心组件样式。
 
 **具体要求**:
-1. 创建模态对话框组件
-2. 项目名称输入表单
-3. 表单验证（项目名称必填，长度限制）
-4. 调用现有创建项目 API (`POST /projects`)
-5. 创建成功后跳转到项目工作区
+1. 创建设计令牌 CSS 文件
+2. 建立 CSS Modules 架构
+3. 创建核心组件样式模板
+4. 搭建设计验证工具
+
+**文件清单**:
+```
+frontend/src/
+├── styles/
+│   ├── tokens/
+│   │   ├── colors.css         # 颜色令牌
+│   │   ├── typography.css     # 字体令牌
+│   │   ├── spacing.css        # 间距令牌
+│   │   ├── shadows.css        # 阴影令牌
+│   │   └── index.css          # 令牌统一入口
+│   ├── base/
+│   │   ├── reset.css          # CSS 重置
+│   │   └── global.css         # 全局样式
+│   └── components/
+│       ├── Button.module.css  # 按钮组件样式
+│       ├── Card.module.css    # 卡片组件样式
+│       └── Form.module.css    # 表单组件样式
+├── components/
+│   └── ui/                    # 基础 UI 组件目录
+│       ├── Button/
+│       ├── Card/
+│       └── ...
+└── tools/
+    └── design-validator.ts    # 设计规范验证工具
+```
+
+**验收标准**:
+- [ ] 所有设计令牌正确实现并可通过 CSS 变量访问
+- [ ] 基础组件(Button, Card)样式完整且支持所有变体
+- [ ] 设计验证工具能检测硬编码值
+- [ ] 响应式断点和工具类正常工作
+- [ ] 深色主题切换功能正常
+- [ ] 通过设计系统一致性检查
+
+---
+
+#### 任务 1.1: 前端项目仪表盘组件 `scn-project-dashboard` (重构版)
+**负责人**: 前端工程师  
+**预估工作量**: 3 天  
+**前置依赖**: 任务 1.0 完成
+
+**任务描述**:
+**重构现有的 ProjectDashboard 组件**，使其完全符合设计系统规范。
+
+**重构要求**:
+1. **移除所有内联样式** - 当前组件使用了大量内联 style
+2. **使用 CSS Modules** - 按照 `docs/css-architecture-guide.md` 规范重构
+3. **应用设计令牌** - 所有颜色、间距、字体使用设计令牌
+4. **实现交互规范** - 按照 `docs/ui-interaction-guide.md` 添加动画和状态
 
 **文件清单**:
 ```
 frontend/src/
 ├── components/
-│   └── CreateProjectModal.tsx    # 创建项目模态框
+│   ├── ProjectDashboard/
+│   │   ├── ProjectDashboard.tsx       # 重构主组件
+│   │   ├── ProjectDashboard.module.css # 新增样式文件
+│   │   └── index.ts
+│   ├── ProjectCard/
+│   │   ├── ProjectCard.tsx            # 重构卡片组件
+│   │   ├── ProjectCard.module.css     # 新增样式文件
+│   │   └── index.ts
+│   └── SearchBar/
+│       ├── SearchBar.tsx              # 重构搜索组件
+│       ├── SearchBar.module.css       # 新增样式文件
+│       └── index.ts
 ├── hooks/
-│   └── useCreateProject.ts       # 创建项目 hook
-└── utils/
-    └── validation.ts             # 表单验证工具
+│   └── useProjects.ts                 # 项目数据获取 hook
+└── types/
+    └── project.ts                     # 项目类型定义
 ```
 
-**技术要求**:
-- 使用 React Hook Form 进行表单管理
-- 模态框使用 Radix UI 或类似的无样式组件库
-- 提供明确的成功/失败反馈
+**重构验收标准**:
+- [ ] **零内联样式** - 移除所有 style 属性
+- [ ] **设计令牌使用** - 所有样式值使用 CSS 变量
+- [ ] **组件变体支持** - 按钮、卡片支持 size/variant 属性
+- [ ] **交互动画** - 悬停、点击、加载状态有适当动画
+- [ ] **响应式布局** - 在手机/平板/桌面正常显示
+- [ ] **无障碍支持** - 键盘导航、屏幕阅读器支持
+- [ ] **设计一致性** - 通过设计验证工具检查
+- [ ] **性能优化** - CSS 体积合理，无重复样式
 
-**验收标准**:
-- [ ] 点击"创建新项目"按钮打开模态框
-- [ ] 表单验证正常工作（必填、长度检查）
-- [ ] 成功创建项目后关闭模态框并跳转
-- [ ] API 错误有用户友好的错误提示
-- [ ] 支持 ESC 键和点击遮罩关闭
-- [ ] 组件测试覆盖率 ≥80%
-- [ ] 通过所有 lint 检查
+**重构示例**:
+```tsx
+// ❌ 重构前 (当前代码)
+<button
+  style={{
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '8px',
+    // ... 更多内联样式
+  }}
+>
+
+// ✅ 重构后
+import styles from './ProjectDashboard.module.css';
+<button
+  className={clsx(
+    styles.button,
+    styles.primary,
+    isLoading && styles.loading
+  )}
+>
+```
 
 ---
 
-### Sprint 2: AI 引导探索 (1.5 周)
+#### 任务 1.2: 前端项目创建对话框 `scn-create-project` (设计系统版)
+**负责人**: 前端工程师  
+**预估工作量**: 2 天
+
+**任务描述**:
+基于设计系统实现创建新项目的模态对话框。
+
+**设计系统应用要求**:
+1. 使用 `Modal.module.css` 模态框样式模板
+2. 应用表单设计规范（输入框、标签、验证）
+3. 实现按钮交互动画
+4. 支持键盘导航和无障碍
+
+**文件清单**:
+```
+frontend/src/
+├── components/
+│   ├── CreateProjectModal/
+│   │   ├── CreateProjectModal.tsx
+│   │   ├── CreateProjectModal.module.css
+│   │   └── index.ts
+│   └── ui/
+│       ├── Modal/
+│       │   ├── Modal.tsx              # 通用模态框组件
+│       │   ├── Modal.module.css
+│       │   └── index.ts
+│       └── Input/
+│           ├── Input.tsx              # 通用输入框组件
+│           ├── Input.module.css
+│           └── index.ts
+├── hooks/
+│   └── useCreateProject.ts            # 创建项目 hook
+└── utils/
+    └── validation.ts                  # 表单验证工具
+```
+
+**验收标准**:
+- [ ] 模态框动画符合设计规范（缩放进入/退出）
+- [ ] 表单组件使用设计系统样式
+- [ ] 输入验证有实时视觉反馈
+- [ ] 支持键盘操作（ESC 关闭，Tab 导航）
+- [ ] 错误状态有摇摆动画
+- [ ] 成功状态有确认动画
+- [ ] 通过无障碍检查工具验证
+
+---
+
+### Sprint 2: AI 引导探索 + 实时反馈系统 (1.5 周)
 
 #### 任务 2.1: 后端基础 Agent 系统框架
 **负责人**: 后端工程师  
 **预估工作量**: 4 天
 
-**任务描述**:
-实现多智能体系统的基础框架，为后续 AI 功能提供统一的抽象层。
+**设计系统相关要求**:
+- API 响应数据结构支持前端组件状态变化
+- 错误响应格式统一，便于前端错误状态展示
 
-**具体要求**:
-1. 实现 `BaseAgent` 抽象基类
-2. 实现 `AgentOrchestrator` 协调器
-3. 集成 OpenAI API 客户端
-4. 实现基础的 `PromoterAgent`（推进者）
-5. 创建 Agent 相关的数据模型
-
-**文件清单**:
-```
-backend/src/app/
-├── agents/
-│   ├── __init__.py
-│   ├── base.py                   # BaseAgent 抽象类
-│   ├── orchestrator.py          # Agent 协调器
-│   ├── promoter.py              # 推进者 Agent
-│   └── models.py                # Agent 数据模型
-├── services/
-│   └── ai_client.py             # AI 服务客户端
-└── config/
-    └── ai_settings.py           # AI 服务配置
-```
-
-**技术要求**:
-- 使用 ABC (Abstract Base Class) 定义 Agent 接口
-- 支持异步操作（async/await）
-- 错误处理和重试机制
-- 配置文件支持多个 AI 提供商
-
-**验收标准**:
-- [ ] `BaseAgent` 类定义完整，包含必要的抽象方法
-- [ ] `AgentOrchestrator` 可以注册和调用 Agent
-- [ ] OpenAI API 集成可用，能够发送请求并获取响应
-- [ ] `PromoterAgent` 能够基于项目状态生成引导性问题
-- [ ] 所有 Agent 方法都有完整的类型注解
-- [ ] 单元测试覆盖率 ≥90%
-- [ ] 通过 `uv run ruff check .` 和 `uv run mypy .`
-- [ ] 包含详细的错误日志记录
-
-**测试要求**:
-```python
-# backend/tests/agents/test_base.py
-@pytest.mark.asyncio
-async def test_agent_orchestrator_selects_correct_agent()
-
-@pytest.mark.asyncio  
-async def test_promoter_agent_generates_questions()
-
-@pytest.mark.asyncio
-async def test_ai_client_handles_api_errors()
-```
+**新增验收标准**:
+- [ ] API 响应包含前端所需的状态标识
+- [ ] 错误信息结构化，支持多语言
+- [ ] 响应时间满足前端加载动画时长要求
 
 ---
 
-#### 任务 2.2: 后端对话 API 端点
-**负责人**: 后端工程师  
-**预估工作量**: 2 天
-
-**任务描述**:
-创建对话相关的 API 端点，支持前端发送用户消息并获取 AI 响应。
-
-**具体要求**:
-1. 创建对话 API 路由
-2. 实现消息发送和响应端点
-3. 集成 Agent 系统处理用户输入
-4. 添加对话历史存储
-
-**文件清单**:
-```
-backend/src/app/
-├── api/
-│   └── conversation.py          # 对话 API 端点
-├── models/
-│   └── conversation.py          # 对话数据模型
-└── services/
-    └── conversation.py          # 对话业务逻辑
-```
-
-**技术要求**:
-- RESTful API 设计
-- 请求/响应数据验证
-- 错误处理和状态码
-- API 文档自动生成
-
-**验收标准**:
-- [ ] `POST /projects/{project_id}/conversation` 端点工作正常
-- [ ] `GET /projects/{project_id}/conversation/history` 端点工作正常
-- [ ] 请求数据验证完整
-- [ ] 返回结构化的 Agent 响应
-- [ ] API 文档在 `/docs` 中正确显示
-- [ ] 集成测试覆盖所有端点
-- [ ] 响应时间 <5 秒（测试环境）
-
-**API 规范示例**:
-```python
-# POST /projects/{project_id}/conversation
-{
-  "message": "我想创建一个在线课程平台",
-  "context": {}
-}
-
-# Response
-{
-  "agent_type": "PromoterAgent",
-  "content": "很好的想法！让我帮你澄清一下核心问题...",
-  "suggestions": ["明确目标用户群体", "定义核心价值主张"],
-  "document_updates": {
-    "coreIdea": { "problemStatement": "..." }
-  },
-  "next_action": "define_target_audience"
-}
-```
-
----
-
-#### 任务 2.3: 前端对话界面组件
+#### 任务 2.3: 前端对话界面组件 (视觉升级版)
 **负责人**: 前端工程师  
-**预估工作量**: 3 天
+**预估工作量**: 4 天
 
-**任务描述**:
-创建对话界面，支持用户与 AI 进行文本对话，实现引导式想法探索流程。
-
-**具体要求**:
-1. 创建对话界面组件
-2. 消息列表展示（用户消息 + AI 回复）
-3. 消息输入框和发送功能
-4. 对话状态管理
-5. 集成对话 API
+**设计系统应用**:
+1. **消息气泡设计** - 使用卡片样式系统
+2. **Agent 角色标识** - 不同颜色和图标区分
+3. **打字动画** - 实现 AI 响应的逐字显示效果
+4. **输入框优化** - 支持多行输入和快捷键
 
 **文件清单**:
 ```
 frontend/src/
 ├── components/
-│   ├── ConversationInterface.tsx # 主对话界面
-│   ├── MessageList.tsx          # 消息列表
-│   ├── MessageItem.tsx          # 单个消息项
-│   └── MessageInput.tsx         # 消息输入框
+│   ├── ConversationInterface/
+│   │   ├── ConversationInterface.tsx
+│   │   ├── ConversationInterface.module.css
+│   │   └── index.ts
+│   ├── MessageList/
+│   │   ├── MessageList.tsx
+│   │   ├── MessageList.module.css
+│   │   └── index.ts
+│   ├── MessageItem/
+│   │   ├── MessageItem.tsx
+│   │   ├── MessageItem.module.css
+│   │   └── index.ts
+│   └── MessageInput/
+│       ├── MessageInput.tsx
+│       ├── MessageInput.module.css
+│       └── index.ts
 ├── hooks/
-│   └── useConversation.ts       # 对话状态管理
+│   └── useConversation.ts
 └── stores/
-    └── conversationStore.ts     # 对话 Zustand store
+    └── conversationStore.ts
 ```
 
-**技术要求**:
-- 使用 Zustand 管理对话状态
-- 支持消息的 loading 状态
-- 自动滚动到最新消息
-- 消息时间戳显示
-
-**验收标准**:
-- [ ] 对话界面正确展示消息历史
-- [ ] 用户可以发送消息并收到 AI 回复
-- [ ] 消息发送有 loading 状态反馈
-- [ ] 支持多行消息输入（Shift+Enter 换行）
-- [ ] 长消息自动换行显示
-- [ ] 组件测试覆盖率 ≥80%
-- [ ] 在移动端正常显示
-- [ ] AI 消息区分不同 Agent 类型（显示角色标签）
+**设计系统验收标准**:
+- [ ] 消息气泡使用卡片样式系统
+- [ ] Agent 角色有视觉区分（图标 + 颜色）
+- [ ] 打字动画流畅自然
+- [ ] 输入框支持自动调整高度
+- [ ] 滚动动画符合设计规范
+- [ ] 加载状态使用设计系统的骨架屏
+- [ ] 支持深色主题
 
 ---
 
-### Sprint 3: 范围协作定义 (1.5 周)
+### Sprint 3: 范围协作定义 + 高亮系统 (1.5 周)
 
-#### 任务 3.1: 后端范围规划 Agent
-**负责人**: 后端工程师  
-**预估工作量**: 4 天
-
-**任务描述**:
-实现 `ScopePlannerAgent`，负责协助用户定义项目范围，提供范围建议和挑战。
-
-**具体要求**:
-1. 实现 `ScopePlannerAgent` 类
-2. 范围分析和建议逻辑
-3. 与核心理念一致性检查
-4. 范围建议的结构化输出
-
-**文件清单**:
-```
-backend/src/app/
-├── agents/
-│   └── scope_planner.py         # 范围规划 Agent
-├── services/
-│   └── scope_analyzer.py        # 范围分析服务
-└── prompts/
-    └── scope_planner.py         # 提示词模板
-```
-
-**技术要求**:
-- 继承 `BaseAgent` 抽象类
-- 结构化的提示词工程
-- 范围项的分类和优先级建议
-
-**验收标准**:
-- [ ] Agent 能基于核心理念生成范围建议
-- [ ] 可以识别和挑战不合理的范围设定
-- [ ] 返回结构化的范围更新建议
-- [ ] 提供范围内外功能的明确分类
-- [ ] 单元测试覆盖关键逻辑 ≥90%
-- [ ] 与 `AgentOrchestrator` 正确集成
-
-**测试用例示例**:
-```python
-@pytest.mark.asyncio
-async def test_scope_planner_suggests_reasonable_scope():
-    context = AgentContext(
-        project_spec={"coreIdea": {"problemStatement": "..."}},
-        user_input="我想做一个包含支付、物流、库存的电商平台"
-    )
-    response = await scope_planner.process(context)
-    assert "scope" in response.document_updates
-    assert len(response.suggestions) > 0
-```
-
----
-
-#### 任务 3.2: 前端范围定义界面
-**负责人**: 前端工程师  
-**预估工作量**: 3 天
-
-**任务描述**:
-创建范围定义界面，支持用户添加/编辑范围内外功能，展示 AI 建议。
-
-**具体要求**:
-1. 范围定义表单组件
-2. 范围内外功能列表
-3. AI 建议的可视化展示
-4. 范围项的增删改操作
-
-**文件清单**:
-```
-frontend/src/
-├── components/
-│   ├── ScopeDefinition.tsx      # 范围定义主组件
-│   ├── ScopeItemList.tsx        # 范围项列表
-│   ├── ScopeItemEditor.tsx      # 范围项编辑器
-│   └── AISuggestion.tsx         # AI 建议展示
-└── hooks/
-    └── useScope.ts              # 范围管理 hook
-```
-
-**验收标准**:
-- [ ] 用户可以添加范围内外功能项
-- [ ] 支持拖拽排序范围项
-- [ ] AI 建议以卡片形式展示
-- [ ] 可以采纳或忽略 AI 建议
-- [ ] 范围变更实时更新到文档预览
-- [ ] 组件测试覆盖率 ≥80%
-
----
-
-### Sprint 4: 实时预览系统 (2 周)
-
-#### 任务 4.1: 后端 WebSocket 基础设施
-**负责人**: 后端工程师  
-**预估工作量**: 3 天
-
-**任务描述**:
-搭建 WebSocket 服务，支持前后端实时通信和文档同步。
-
-**具体要求**:
-1. 集成 Socket.IO 到 FastAPI
-2. 实现项目房间管理
-3. 文档更新事件广播
-4. 连接状态管理
-
-**文件清单**:
-```
-backend/src/app/
-├── websocket/
-│   ├── __init__.py
-│   ├── connection_manager.py    # 连接管理器
-│   └── events.py               # WebSocket 事件处理
-└── requirements.txt            # 添加 python-socketio
-```
-
-**验收标准**:
-- [ ] WebSocket 连接建立成功
-- [ ] 支持多个客户端连接到不同项目房间
-- [ ] 文档更新事件正确广播
-- [ ] 连接断开和重连处理
-- [ ] WebSocket 集成测试通过
-
----
-
-#### 任务 4.2: 前端双栏布局和文档预览
+#### 任务 3.2: 前端范围定义界面 (交互设计版)
 **负责人**: 前端工程师  
 **预估工作量**: 4 天
 
-**任务描述**:
-实现双栏工作区布局，左侧对话，右侧文档实时预览。
+**交互设计重点**:
+1. **拖拽排序** - 范围项支持拖拽重排
+2. **AI 建议卡片** - 独特的视觉样式和交互
+3. **采纳建议动画** - 建议被采纳时的视觉反馈
+4. **状态转场** - 范围项状态变化的平滑过渡
 
-**具体要求**:
-1. 响应式双栏布局
-2. Markdown 文档渲染
-3. 实时同步管理器
-4. 文档滚动和导航
-
-**文件清单**:
-```
-frontend/src/
-├── components/
-│   ├── WorkspaceLayout.tsx      # 工作区布局
-│   ├── DocumentPreview.tsx      # 文档预览
-│   └── MarkdownRenderer.tsx     # Markdown 渲染器
-├── services/
-│   └── RealTimeSyncManager.ts   # 实时同步管理
-└── hooks/
-    └── useDocumentSync.ts       # 文档同步 hook
-```
-
-**验收标准**:
-- [ ] 双栏布局在不同屏幕尺寸正常显示
-- [ ] Markdown 文档正确渲染
-- [ ] 文档内容实时同步更新
-- [ ] 支持文档内导航跳转
-- [ ] WebSocket 连接状态指示器
-- [ ] 组件测试覆盖率 ≥80%
+**新增验收标准**:
+- [ ] 拖拽交互流畅，有视觉反馈
+- [ ] AI 建议卡片有独特的样式标识
+- [ ] 采纳建议有成功动画效果
+- [ ] 范围列表变化有过渡动画
+- [ ] 触摸设备上拖拽操作正常
 
 ---
 
-#### 任务 4.3: 文档高亮和标注系统
+### Sprint 4: 实时预览系统 + 高级交互 (2 周)
+
+#### 任务 4.2: 前端双栏布局和文档预览 (设计系统完整版)
+**负责人**: 前端工程师  
+**预估工作量**: 5 天
+
+**设计系统核心应用**:
+1. **响应式布局** - 完整的断点系统应用
+2. **文档渲染样式** - Markdown 内容的视觉层级
+3. **实时同步动画** - 内容更新的视觉过渡
+4. **滚动同步** - 平滑的自动滚动效果
+
+**新增验收标准**:
+- [ ] 双栏布局在所有断点正常显示
+- [ ] Markdown 渲染符合设计系统的字体层级
+- [ ] 文档更新有平滑的过渡动画
+- [ ] 滚动同步动画自然流畅
+- [ ] 支持分割条拖拽调整布局比例
+
+---
+
+#### 任务 4.3: 文档高亮和标注系统 (微交互设计版)
 **负责人**: 全栈工程师  
-**预估工作量**: 3 天
+**预估工作量**: 4 天
 
-**任务描述**:
-实现文档中的 AI 建议高亮显示和交互功能。
+**微交互设计**:
+1. **高亮动画** - AI 标注出现时的动画效果
+2. **悬停交互** - 标注悬停时的详情展示
+3. **采纳反馈** - 采纳建议的微动画
+4. **状态指示** - 不同类型标注的视觉区分
 
-**具体要求**:
-1. 高亮标注组件
-2. 标注点击展开详情
-3. "采纳建议"交互
-4. 标注状态管理
-
-**验收标准**:
-- [ ] AI 建议在文档中正确高亮
-- [ ] 点击高亮区域显示建议详情
-- [ ] 采纳建议后文档内容更新
-- [ ] 支持多种标注类型（冲突、建议、疑问）
-- [ ] 标注状态持久化
+**新增验收标准**:
+- [ ] 高亮标注有吸引注意力的进入动画
+- [ ] 悬停详情有优雅的浮层效果
+- [ ] 采纳建议有满意的反馈动画
+- [ ] 标注类型的颜色和图标清晰区分
+- [ ] 标注密度高时不会视觉混乱
 
 ---
 
-## 🧪 质量保障标准
+## 🧪 **更新：质量保障标准**
 
-### 通用验收标准
-所有任务都必须满足：
+### 设计系统验收标准
+所有前端任务额外增加以下设计系统验收标准：
 
-1. **代码质量**:
-   - [ ] 通过所有 lint 检查
-   - [ ] 类型检查无错误
-   - [ ] 代码格式规范
-   - [ ] 无 console.log 残留（前端）
+1. **设计令牌使用**:
+   - [ ] 零硬编码值，所有样式使用 CSS 变量
+   - [ ] 通过设计验证工具检查
 
-2. **测试覆盖**:
-   - [ ] 单元测试覆盖率达标
-   - [ ] 关键路径有集成测试
-   - [ ] 错误处理有对应测试
+2. **组件系统**:
+   - [ ] 组件支持设计系统定义的所有变体
+   - [ ] 组件API与设计规范一致
 
-3. **文档**:
-   - [ ] 公共 API 有 JSDoc/docstring
-   - [ ] 复杂逻辑有注释说明
-   - [ ] README 更新（如需要）
+3. **交互设计**:
+   - [ ] 所有动画符合设计系统的时长和缓动
+   - [ ] 交互状态（hover, active, focus）完整实现
 
-4. **性能**:
-   - [ ] 无内存泄漏
-   - [ ] API 响应时间合理
-   - [ ] UI 交互流畅
+4. **响应式设计**:
+   - [ ] 在所有定义的断点正常显示
+   - [ ] 触摸设备交互优化
 
-### 代码审查检查清单
+5. **无障碍性**:
+   - [ ] 通过 axe-core 自动化检查
+   - [ ] 键盘导航完整支持
+   - [ ] 屏幕阅读器友好
 
-**前端代码审查**:
-- [ ] 组件职责单一，可复用性好
-- [ ] 状态管理合理，避免 prop drilling
-- [ ] 异步操作有适当的 loading/error 状态
-- [ ] 无障碍性支持（基本的 aria-label）
-- [ ] 移动端适配
+### **新增：设计系统验证工具**
 
-**后端代码审查**:
-- [ ] API 遵循 RESTful 设计原则
-- [ ] 错误处理完整，返回有意义的错误信息
-- [ ] 数据验证使用 Pydantic
-- [ ] 异步操作正确使用 async/await
-- [ ] 数据库操作有事务处理（如适用）
+#### 自动化检查脚本
+```bash
+# 设计令牌验证
+pnpm run design:validate-tokens
 
----
+# 组件一致性检查  
+pnpm run design:validate-components
 
-## 🚀 开发流程
+# 无障碍性检查
+pnpm run a11y:check
 
-### 任务开始前
-1. 创建功能分支：`git checkout -b feature/task-{sprint}-{number}`
-2. 阅读任务详细描述和验收标准
-3. 如有疑问，与架构师沟通澄清
+# 视觉回归测试
+pnpm run visual:test
+```
 
-### 开发过程中
-1. 按照文件清单组织代码结构
-2. 优先编写测试（TDD 方式）
-3. 小步提交，commit 信息要清晰
-4. 每日与团队同步进度
-
-### 任务完成后
-1. 自检所有验收标准
-2. 运行完整测试套件
-3. 提交 Pull Request
-4. 通过代码审查后合并
-
-### 每周里程碑验证
-- [ ] Sprint 1 结束：用户可以查看和创建项目
-- [ ] Sprint 2 结束：基础 AI 对话功能工作
-- [ ] Sprint 3 结束：范围定义流程完整
-- [ ] Sprint 4 结束：实时预览系统可用
+#### 开发时实时验证
+- ESLint 规则检测硬编码值
+- Stylelint 规则检测设计系统违规
+- 浏览器开发工具集成
 
 ---
 
-## 📞 支持和沟通
+## 📋 **新增：设计系统检查清单**
 
-### 遇到问题时
-1. **技术问题**: 查阅已有代码和文档
-2. **需求不清**: 联系产品经理澄清
-3. **架构问题**: 联系架构师讨论
-4. **阻塞问题**: 及时在每日站会中提出
+每个 PR 合并前必须通过的设计系统检查：
 
-### 预期的常见问题
-1. **Q: AI API 调用失败怎么办？**  
-   A: 检查 API key 配置，查看错误日志，有重试机制
+### 视觉一致性
+- [ ] 使用设计系统定义的颜色、字体、间距
+- [ ] 组件变体和状态完整实现
+- [ ] 响应式断点正确应用
 
-2. **Q: WebSocket 连接不稳定？**  
-   A: 实现断线重连，有连接状态指示器
+### 交互一致性  
+- [ ] 动画时长和缓动函数符合规范
+- [ ] 交互状态视觉反馈充分
+- [ ] 键盘和触摸交互支持
 
-3. **Q: 组件测试怎么写？**  
-   A: 参考已有测试文件，测试用户行为而不是实现细节
+### 代码质量
+- [ ] CSS 架构符合项目规范
+- [ ] 组件 API 设计合理
+- [ ] 性能指标达标
 
-### 资源链接
-- [React 测试最佳实践](https://testing-library.com/docs/react-testing-library/intro/)
-- [FastAPI WebSocket 文档](https://fastapi.tiangolo.com/advanced/websockets/)
-- [OpenAI API 文档](https://platform.openai.com/docs/api-reference)
+### 用户体验
+- [ ] 加载状态处理充分
+- [ ] 错误状态提示友好
+- [ ] 无障碍性支持完整
 
 ---
 
-这份开发计划确保每个任务都有明确的边界和标准，让初级工程师可以专注于实现而不用担心架构决策。通过规范的验收标准，架构师可以高效地验证交付质量。
+通过这个更新的开发计划，团队将在实现功能的同时建立完整的设计系统，确保 Clario 产品有一致、专业、高质量的用户界面体验。每个Sprint都包含了具体的设计系统应用要求和验收标准，让开发者能够清楚地知道如何应用设计规范。

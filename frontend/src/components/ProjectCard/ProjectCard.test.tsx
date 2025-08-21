@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { ProjectCard } from './ProjectCard';
-import type { Project } from '../types/project';
+import type { Project } from '../../types/project';
 
 // 创建测试用的QueryClient
 const createTestQueryClient = () =>

@@ -5,7 +5,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { ProjectFilter } from '../types/project';
+import { ProjectFilter } from '../../types/project';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
@@ -205,5 +205,3 @@ export function SearchBar({
     </div>
   );
 }
-
-export default SearchBar;

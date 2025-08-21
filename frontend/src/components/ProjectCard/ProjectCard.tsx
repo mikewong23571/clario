@@ -5,8 +5,8 @@
 
 import React, { useCallback } from 'react';
 import { clsx } from 'clsx';
-import { Project } from '../types/project';
-import { usePrefetchProject } from '../hooks/useProjects';
+import { Project } from '../../types/project';
+import { usePrefetchProject } from '../../hooks/useProjects';
 import styles from './ProjectCard.module.css';
 
 interface ProjectCardProps {
@@ -203,5 +203,3 @@ export function ProjectCard({
     </div>
   );
 }
-
-export default ProjectCard;

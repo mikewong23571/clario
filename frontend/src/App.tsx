@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import ProjectDashboard from './components/ProjectDashboard';
+import { ProjectDashboard } from './components/ProjectDashboard';
 import { Project } from './types/project';
 import styles from './App.module.css';
 

@@ -5,11 +5,11 @@
 
 import React, { useState, useCallback } from 'react';
 import { clsx } from 'clsx';
-import { useFilteredProjects } from '../hooks/useProjects';
-import { Project, ProjectFilter } from '../types/project';
-import SearchBar from './SearchBar';
-import ProjectCard from './ProjectCard';
-import styles from './ProjectDashboard/ProjectDashboard.module.css';
+import { useFilteredProjects } from '../../hooks/useProjects';
+import { Project, ProjectFilter } from '../../types/project';
+import { SearchBar } from '../SearchBar';
+import { ProjectCard } from '../ProjectCard';
+import styles from './ProjectDashboard.module.css';
 
 interface ProjectDashboardProps {
   /** 点击项目卡片的回调 */
@@ -266,5 +266,3 @@ export function ProjectDashboard({
     </div>
   );
 }
-
-export default ProjectDashboard;

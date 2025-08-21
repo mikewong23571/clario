@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { ProjectDashboard } from './ProjectDashboard';
-import * as useProjectsHook from '../hooks/useProjects';
-import type { Project } from '../types/project';
+import * as useProjectsHook from '../../hooks/useProjects';
+import type { Project } from '../../types/project';
 
 // Mock the hook
-vi.mock('../hooks/useProjects');
+vi.mock('../../hooks/useProjects');
 
 const mockUseFilteredProjects = vi.mocked(useProjectsHook.useFilteredProjects);
 const mockUsePrefetchProject = vi.mocked(useProjectsHook.usePrefetchProject);

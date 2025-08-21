@@ -44,12 +44,11 @@ clario/
 ### 4.1 后端
 ```
 cd backend
-uv venv
-uv pip install -e .[dev]
+uv sync
 uv run pytest -q
 uv run uvicorn app.main:app --reload --port 8000  # 开发服务（可选）
 ```
-> 注意：PowerShell 不支持 `&&` 串联，上述命令需逐条执行。
+> 注意：PowerShell 不支持 `&&` 串联，上述命令需逐条执行。`uv sync` 会自动创建和管理虚拟环境，无需手动 `uv venv`。
 
 ### 4.2 前端
 ```
@@ -127,7 +126,7 @@ pnpm format:fe:check              # 前端 Prettier 格式检查
 ## 10. CI/CD（规划）
 - GitHub Actions（建议）
   - Job 1：前端（pnpm install → lint/tsc → vitest → e2e smoke）
-  - Job 2：后端（uv venv → install → ruff/mypy → pytest）
+  - Job 2：后端（uv sync → ruff/mypy → pytest）
   - 缓存 pnpm/uv 依赖；E2E 完整套件跑夜间构建
 - 版本与发布：以后续约定的分支策略与标签命名为准
 
@@ -149,7 +148,7 @@ pnpm format:fe:check              # 前端 Prettier 格式检查
 ## 12. 常见问题与排错
 - PowerShell 不支持 `&&`：命令请逐条执行
 - Playwright 首次运行需安装浏览器：`pnpm exec playwright install chromium`
-- Python 环境：使用 `uv venv` 创建隔离环境，避免污染系统 Python
+- Python 环境：使用 `uv sync` 创建和管理隔离环境，避免污染系统 Python
 
 ## 13. 参考
 - 业务规格：`docs/clario-spec.md`
@@ -164,19 +163,23 @@ pnpm format:fe:check              # 前端 Prettier 格式检查
 
 ### 14.1 uv（Python 依赖与环境）
 - 依赖声明
-  - 唯一依赖源：backend/<mcfile name="pyproject.toml" path="backend/pyproject.toml"></mcfile>（含可选 extras：`[project.optional-dependencies].dev`）。
-  - Python 版本：以 `.python-version` 为准（当前 3.12）；建议将 `requires-python` 与 mypy `python_version` 对齐（本仓将通过后续 PR 统一为 3.12）。
+  - 唯一依赖源：backend/<mcfile name="pyproject.toml" path="backend/pyproject.toml"></mcfile>（含开发依赖组：`[dependency-groups].dev`）。
+  - Python 版本：以 `.python-version` 为准（当前 3.12），已与 `requires-python` 和 mypy `python_version` 对齐。
 - 安装与运行（PowerShell，逐条执行）
   - cd backend
-  - uv venv
-  - uv pip install -e .[dev]
+  - uv sync  # 自动安装所有依赖，包括 dev 依赖组
   - 运行工具统一用 `uv run <cmd>`，例如：
     - 测试：`uv run pytest -q`
     - Lint：`uv run ruff check .`
     - 类型检查：`uv run mypy .`
     - 本地服务：`uv run uvicorn app.main:app --reload --port 8000`
+- 依赖管理
+  - 添加新依赖：`uv add <package>` 或 `uv add --dev <package>`（开发依赖）
+  - 移除依赖：`uv remove <package>`
+  - 更新特定依赖：`uv sync --upgrade-package <package>`
+  - 更新所有依赖：`uv lock --upgrade` 然后 `uv sync`
 - 维护与重置
-  - 环境损坏或异常时：删除 `.venv` → `uv venv` → `uv pip install -e .[dev]`。
+  - 环境损坏或异常时：删除 `.venv` → `uv sync`。
 - 反模式（不要做）
   - 不全局 `pip install`；不手动 `activate` 虚拟环境；不使用 `conda/poetry/pipenv`。
   - 不在系统 Python 环境直接运行测试/服务。

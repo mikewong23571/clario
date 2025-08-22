@@ -21,6 +21,14 @@ export {
   CardIcon,
 } from './Card';
 
+// 模态框组件
+export { Modal } from './Modal';
+export type { ModalProps } from './Modal';
+
+// 输入框组件
+export { Input } from './Input';
+export type { InputProps } from './Input';
+
 export type {
   CardProps,
   CardHeaderProps,

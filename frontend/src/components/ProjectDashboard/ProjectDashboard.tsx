@@ -9,6 +9,7 @@ import { useFilteredProjects } from '../../hooks/useProjects';
 import { Project, ProjectFilter } from '../../types/project';
 import { SearchBar } from '../SearchBar';
 import { ProjectCard } from '../ProjectCard';
+import { CreateProjectModal } from '../CreateProjectModal';
 import styles from './ProjectDashboard.module.css';
 
 interface ProjectDashboardProps {
@@ -33,6 +34,9 @@ export function ProjectDashboard({
     sortBy: 'lastUpdated',
     sortOrder: 'desc',
   });
+
+  // 创建项目模态框状态
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // 获取过滤后的项目数据
   const {
@@ -62,10 +66,24 @@ export function ProjectDashboard({
 
   // 处理创建项目按钮点击
   const handleCreateProject = useCallback(() => {
+    setIsCreateModalOpen(true);
+  }, []);
+
+  // 处理创建项目模态框关闭
+  const handleCreateModalClose = useCallback(() => {
+    setIsCreateModalOpen(false);
+  }, []);
+
+  // 处理项目创建成功
+  const handleProjectCreated = useCallback((project: any) => {
+    setIsCreateModalOpen(false);
+    // 刷新项目列表
+    refetch();
+    // 调用外部回调
     if (onCreateProject) {
       onCreateProject();
     }
-  }, [onCreateProject]);
+  }, [refetch, onCreateProject]);
 
   // 处理重试
   const handleRetry = useCallback(() => {
@@ -263,6 +281,13 @@ export function ProjectDashboard({
           </div>
         )}
       </div>
+
+      {/* 创建项目模态框 */}
+      <CreateProjectModal
+        open={isCreateModalOpen}
+        onClose={handleCreateModalClose}
+        onSuccess={handleProjectCreated}
+      />
     </div>
   );
 }

@@ -1,0 +1,293 @@
+/**
+ * Modal 组件样式
+ * 基于 Clario 设计系统的模态框实现
+ */
+
+/* ===== 遮罩层 ===== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-modal);
+  
+  /* 背景遮罩 */
+  background-color: var(--color-overlay);
+  backdrop-filter: blur(4px);
+  
+  /* 布局 */
+  display: flex;
+  padding: var(--space-4);
+  
+  /* 进入动画 */
+  animation: overlayEnter var(--duration-base) var(--ease-out) forwards;
+}
+
+.overlay.centered {
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== 模态框容器 ===== */
+.modal {
+  position: relative;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-modal);
+  
+  /* 布局 */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--space-8));
+  width: 100%;
+  
+  /* 进入动画 */
+  animation: modalEnter var(--duration-base) var(--ease-out) forwards;
+  
+  /* 确保内容不会溢出 */
+  overflow: hidden;
+}
+
+/* ===== 模态框大小变体 ===== */
+.small {
+  max-width: 400px;
+}
+
+.medium {
+  max-width: 500px;
+}
+
+.large {
+  max-width: 700px;
+}
+
+.fullscreen {
+  max-width: none;
+  width: calc(100vw - var(--space-8));
+  height: calc(100vh - var(--space-8));
+  max-height: none;
+}
+
+/* ===== 模态框头部 ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-modal-padding);
+  border-bottom: var(--border-width-1) solid var(--color-border-secondary);
+  
+  /* 防止内容收缩 */
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font: var(--font-heading-h3);
+  color: var(--color-text-primary);
+  
+  /* 防止标题过长时溢出 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: var(--space-4);
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-10);
+  height: var(--space-10);
+  
+  /* 样式重置 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  
+  /* 视觉样式 */
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-base);
+  
+  /* 防止收缩 */
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-primary);
+}
+
+.closeButton:focus-visible {
+  outline: var(--border-width-2) solid var(--color-primary-500);
+  outline-offset: var(--space-px);
+}
+
+.closeButton:active {
+  background-color: var(--color-gray-200);
+  transform: scale(0.95);
+}
+
+/* ===== 模态框内容 ===== */
+.content {
+  padding: var(--space-modal-padding);
+  overflow-y: auto;
+  
+  /* 允许内容区域伸缩 */
+  flex: 1;
+  min-height: 0;
+}
+
+/* 当没有标题时，调整内容区域的上边距 */
+.modal:not(:has(.header)) .content {
+  padding-top: var(--space-modal-padding);
+}
+
+/* ===== 动画定义 ===== */
+@keyframes overlayEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-var(--space-4));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== 响应式设计 ===== */
+
+/* 移动设备 */
+@media (max-width: 640px) {
+  .overlay {
+    padding: var(--space-2);
+    align-items: flex-end;
+  }
+  
+  .modal {
+    max-height: calc(100vh - var(--space-4));
+    border-radius: var(--radius-modal-sm) var(--radius-modal-sm) 0 0;
+  }
+  
+  .small,
+  .medium,
+  .large {
+    max-width: none;
+    width: 100%;
+  }
+  
+  .fullscreen {
+    width: 100%;
+    height: calc(100vh - var(--space-4));
+    border-radius: 0;
+  }
+  
+  .header {
+    padding: var(--space-4);
+  }
+  
+  .content {
+    padding: var(--space-4);
+  }
+  
+  /* 移动设备上的动画调整 */
+  @keyframes modalEnter {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* 平板设备 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .overlay {
+    padding: var(--space-6);
+  }
+  
+  .modal {
+    max-height: calc(100vh - var(--space-12));
+  }
+  
+  .large {
+    max-width: 600px;
+  }
+  
+  .fullscreen {
+    width: calc(100vw - var(--space-12));
+    height: calc(100vh - var(--space-12));
+  }
+}
+
+/* ===== 深色主题支持 ===== */
+[data-theme="dark"] .modal {
+  background-color: var(--color-bg-primary);
+  box-shadow: var(--shadow-modal);
+}
+
+[data-theme="dark"] .header {
+  border-bottom-color: var(--color-border-secondary);
+}
+
+[data-theme="dark"] .closeButton:hover {
+  background-color: var(--color-gray-800);
+}
+
+[data-theme="dark"] .closeButton:active {
+  background-color: var(--color-gray-700);
+}
+
+/* ===== 无障碍支持 ===== */
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .modal {
+    animation: none;
+  }
+  
+  .closeButton {
+    transition: none;
+  }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .modal {
+    border: var(--border-width-2) solid var(--color-border-primary);
+  }
+  
+  .header {
+    border-bottom-width: var(--border-width-2);
+  }
+  
+  .closeButton {
+    border: var(--border-width-1) solid var(--color-border-primary);
+  }
+}
+
+/* 焦点指示器增强 */
+.closeButton:focus-visible {
+  outline: var(--border-width-2) solid var(--color-primary-500);
+  outline-offset: var(--space-1);
+}
+
+/* 确保模态框在所有情况下都可见 */
+.modal {
+  min-width: 280px;
+  min-height: 120px;
+}

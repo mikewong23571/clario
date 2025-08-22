@@ -7,6 +7,20 @@ import { ProjectDashboard } from './ProjectDashboard';
 import * as useProjectsHook from '../../hooks/useProjects';
 import type { Project } from '../../types/project';
 
+// Mock CreateProjectModal
+vi.mock('../CreateProjectModal', () => ({
+  CreateProjectModal: ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+    return open ? (
+      <div data-testid="create-project-modal">
+        <h2>创建新项目</h2>
+        <label htmlFor="project-name">项目名称</label>
+        <input id="project-name" />
+        <button onClick={onClose}>关闭</button>
+      </div>
+    ) : null;
+  },
+}));
+
 // Mock the hook
 vi.mock('../../hooks/useProjects');
 
@@ -126,7 +140,7 @@ describe('ProjectDashboard', () => {
     expect(createButtons.length).toBeGreaterThan(0);
   });
 
-  it('calls onCreateProject when create button is clicked', async () => {
+  it('opens create project modal when create button is clicked', async () => {
     const user = userEvent.setup();
     mockUseFilteredProjects.mockReturnValue({
       data: [],
@@ -145,7 +159,9 @@ describe('ProjectDashboard', () => {
     const createButton = screen.getAllByText('创建新项目')[0];
     await user.click(createButton);
 
-    expect(defaultProps.onCreateProject).toHaveBeenCalledTimes(1);
+    // Check if the modal is opened
+    expect(screen.getByTestId('create-project-modal')).toBeInTheDocument();
+    expect(screen.getByLabelText('项目名称')).toBeInTheDocument();
   });
 
   it('renders SearchBar component', () => {

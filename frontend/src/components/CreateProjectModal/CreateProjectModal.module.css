@@ -1,0 +1,322 @@
+/**
+ * CreateProjectModal 组件样式
+ * 基于 Clario 设计系统
+ */
+
+/* 表单容器 */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* 字段组 */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* 字段标签 */
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+
+.required {
+  color: var(--color-semantic-error);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* 项目类型网格 */
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+/* 项目类型选项 */
+.typeOption {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border: 2px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-background-primary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  transition-property: border-color, background-color, box-shadow;
+}
+
+.typeOption:hover:not(.typeOptionDisabled) {
+  border-color: var(--color-border-hover);
+  background-color: var(--color-background-hover);
+}
+
+.typeOptionSelected {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-primary-50);
+  box-shadow: 0 0 0 1px var(--color-primary-500);
+}
+
+.typeOptionDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 隐藏原生单选按钮 */
+.typeRadio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 项目类型内容 */
+.typeContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.typeTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.typeDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* 项目模板网格 */
+.templateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-sm);
+}
+
+/* 项目模板选项 */
+.templateOption {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-background-primary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  transition-property: border-color, background-color, box-shadow;
+}
+
+.templateOption:hover:not(.templateOptionDisabled) {
+  border-color: var(--color-border-hover);
+  background-color: var(--color-background-hover);
+}
+
+.templateOptionSelected {
+  border-color: var(--color-primary-500);
+  background-color: var(--color-primary-50);
+  box-shadow: 0 0 0 1px var(--color-primary-500);
+}
+
+.templateOptionDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 隐藏原生单选按钮 */
+.templateRadio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 项目模板内容 */
+.templateContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.templateTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.templateDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* 错误信息 */
+.errorMessage {
+  font-size: var(--font-size-sm);
+  color: var(--color-semantic-error);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+
+/* 操作按钮 */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: var(--spacing-md);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .form {
+    gap: var(--spacing-md);
+    max-height: 60vh;
+  }
+  
+  .typeGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .templateGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .typeOption,
+  .templateOption {
+    padding: var(--spacing-sm);
+  }
+  
+  .actions {
+    flex-direction: column-reverse;
+    gap: var(--spacing-xs);
+  }
+  
+  .actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .typeContent,
+  .templateContent {
+    gap: var(--spacing-2xs);
+  }
+  
+  .typeTitle,
+  .templateTitle {
+    font-size: var(--font-size-sm);
+  }
+  
+  .typeDescription,
+  .templateDescription {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* 深色主题支持 */
+@media (prefers-color-scheme: dark) {
+  .typeOption,
+  .templateOption {
+    background-color: var(--color-background-primary-dark, var(--color-gray-900));
+    border-color: var(--color-border-primary-dark, var(--color-gray-700));
+  }
+  
+  .typeOption:hover:not(.typeOptionDisabled),
+  .templateOption:hover:not(.templateOptionDisabled) {
+    background-color: var(--color-background-hover-dark, var(--color-gray-800));
+    border-color: var(--color-border-hover-dark, var(--color-gray-600));
+  }
+  
+  .typeOptionSelected,
+  .templateOptionSelected {
+    background-color: var(--color-primary-900, var(--color-primary-50));
+  }
+  
+  .typeTitle,
+  .templateTitle,
+  .fieldLabel {
+    color: var(--color-text-primary-dark, var(--color-gray-100));
+  }
+  
+  .typeDescription,
+  .templateDescription {
+    color: var(--color-text-secondary-dark, var(--color-gray-300));
+  }
+  
+  .actions {
+    border-color: var(--color-border-primary-dark, var(--color-gray-700));
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .typeOption,
+  .templateOption {
+    border-width: 2px;
+  }
+  
+  .typeOptionSelected,
+  .templateOptionSelected {
+    box-shadow: 0 0 0 2px var(--color-primary-500);
+  }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .typeOption,
+  .templateOption {
+    transition: none;
+  }
+}
+
+/* 焦点样式 */
+.typeOption:focus-within,
+.templateOption:focus-within {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* 滚动条样式 */
+.form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form::-webkit-scrollbar-track {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-sm);
+}
+
+.form::-webkit-scrollbar-thumb {
+  background: var(--color-border-primary);
+  border-radius: var(--border-radius-sm);
+}
+
+.form::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}

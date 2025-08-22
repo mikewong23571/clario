@@ -9,7 +9,13 @@ import type { Project } from '../../types/project';
 
 // Mock CreateProjectModal
 vi.mock('../CreateProjectModal', () => ({
-  CreateProjectModal: ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+  CreateProjectModal: ({
+    open,
+    onClose,
+  }: {
+    open: boolean;
+    onClose: () => void;
+  }) => {
     return open ? (
       <div data-testid="create-project-modal">
         <h2>创建新项目</h2>

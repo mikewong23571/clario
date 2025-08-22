@@ -75,7 +75,7 @@ export function ProjectDashboard({
   }, []);
 
   // 处理项目创建成功
-  const handleProjectCreated = useCallback((project: any) => {
+  const handleProjectCreated = useCallback(() => {
     setIsCreateModalOpen(false);
     // 刷新项目列表
     refetch();

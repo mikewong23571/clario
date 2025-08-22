@@ -49,20 +49,24 @@ export interface UseCreateProjectReturn {
 /**
  * 模拟API调用 - 在实际项目中应该替换为真实的API调用
  */
-const mockCreateProjectAPI = async (projectData: ProjectFormData): Promise<CreatedProject> => {
+const mockCreateProjectAPI = async (
+  projectData: ProjectFormData
+): Promise<CreatedProject> => {
   // 模拟网络延迟
-  await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
-  
+  await new Promise((resolve) =>
+    setTimeout(resolve, 2000 + Math.random() * 1000)
+  );
+
   // 模拟随机失败（10%概率）
   if (Math.random() < 0.1) {
     throw new Error('网络错误：无法连接到服务器');
   }
-  
+
   // 模拟项目名称冲突（5%概率）
   if (Math.random() < 0.05) {
     throw new Error(`项目名称 "${projectData.name}" 已存在，请选择其他名称`);
   }
-  
+
   // 生成模拟的项目数据
   const projectId = `proj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const createdProject: CreatedProject = {
@@ -75,7 +79,7 @@ const mockCreateProjectAPI = async (projectData: ProjectFormData): Promise<Creat
     path: `/projects/${projectData.name.toLowerCase().replace(/\s+/g, '-')}`,
     status: 'ready',
   };
-  
+
   return createdProject;
 };
 
@@ -93,7 +97,7 @@ export const useCreateProject = (): UseCreateProjectReturn => {
    * 创建项目
    */
   const createProject = useCallback(async (projectData: ProjectFormData) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       loading: true,
       error: null,
@@ -102,29 +106,29 @@ export const useCreateProject = (): UseCreateProjectReturn => {
     try {
       // 验证项目数据
       validateProjectData(projectData);
-      
+
       // 调用API创建项目
       const createdProject = await mockCreateProjectAPI(projectData);
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         loading: false,
         createdProject,
         error: null,
       }));
-      
+
       // 可以在这里添加成功回调，比如显示通知、跳转页面等
       console.log('项目创建成功:', createdProject);
-      
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '创建项目时发生未知错误';
-      
-      setState(prev => ({
+      const errorMessage =
+        error instanceof Error ? error.message : '创建项目时发生未知错误';
+
+      setState((prev) => ({
         ...prev,
         loading: false,
         error: errorMessage,
       }));
-      
+
       // 记录错误日志
       console.error('创建项目失败:', error);
     }
@@ -145,7 +149,7 @@ export const useCreateProject = (): UseCreateProjectReturn => {
    * 清除错误
    */
   const clearError = useCallback(() => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       error: null,
     }));
@@ -170,4 +174,5 @@ export const PROJECT_STATUS = {
   ERROR: 'error' as const,
 } as const;
 
-export type ProjectStatus = typeof PROJECT_STATUS[keyof typeof PROJECT_STATUS];
+export type ProjectStatus =
+  (typeof PROJECT_STATUS)[keyof typeof PROJECT_STATUS];

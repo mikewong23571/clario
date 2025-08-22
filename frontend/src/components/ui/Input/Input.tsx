@@ -63,20 +63,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className,
       wrapperClassName,
       value,
+      defaultValue,
       onChange,
       onFocus,
       onBlur,
       disabled,
       id,
-      ...props
+      ...inputProps
     },
     ref
   ) => {
+    // Filter out custom props that shouldn't go to the DOM input
+    const {
+      // Remove any custom props that aren't native input props
+      ...domProps
+    } = inputProps;
     const [focused, setFocused] = useState(false);
-    const [internalValue, setInternalValue] = useState(value || '');
+    const [internalValue, setInternalValue] = useState(defaultValue || '');
 
+    // 判断是否为受控组件
+    const isControlled = value !== undefined;
     // 使用受控或非受控值
-    const currentValue = value !== undefined ? value : internalValue;
+    const currentValue = isControlled ? value : internalValue;
     const hasValue = Boolean(currentValue);
     const showClearButton = clearable && hasValue && !disabled;
 
@@ -106,34 +114,35 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const handleChange = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
-        
+
         // 如果设置了最大长度，限制输入
         if (maxLength && newValue.length > maxLength) {
           return;
         }
 
-        if (value === undefined) {
+        // 如果是非受控组件，更新内部状态
+        if (!isControlled) {
           setInternalValue(newValue);
         }
         onChange?.(event);
       },
-      [value, maxLength, onChange]
+      [isControlled, maxLength, onChange]
     );
 
     // 处理清空
     const handleClear = useCallback(() => {
-      if (value === undefined) {
+      if (!isControlled) {
         setInternalValue('');
       }
       onClear?.();
-      
+
       // 创建一个模拟的change事件
       const syntheticEvent = {
         target: { value: '' },
         currentTarget: { value: '' },
       } as React.ChangeEvent<HTMLInputElement>;
       onChange?.(syntheticEvent);
-    }, [value, onClear, onChange]);
+    }, [isControlled, onClear, onChange]);
 
     // 计算字符数
     const characterCount = String(currentValue).length;
@@ -184,7 +193,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={clsx(styles.input, className)}
-            value={currentValue}
+            {...(isControlled ? { value: currentValue } : { defaultValue })}
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
@@ -196,7 +205,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               errorMessage && errorId
             )}
             aria-invalid={finalStatus === 'error'}
-            {...props}
+            {...domProps}
           />
 
           {/* 右侧内容 */}

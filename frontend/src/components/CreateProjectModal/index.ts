@@ -3,4 +3,7 @@
  */
 
 export { CreateProjectModal } from './CreateProjectModal';
-export type { CreateProjectModalProps, ProjectFormData } from './CreateProjectModal';
+export type {
+  CreateProjectModalProps,
+  ProjectFormData,
+} from './CreateProjectModal';

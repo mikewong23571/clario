@@ -7,7 +7,7 @@ export interface ValidationRule {
   /** 验证规则名称 */
   name: string;
   /** 验证函数 */
-  validate: (value: any, context?: any) => string | undefined;
+  validate: (value: unknown, context?: unknown) => string | undefined;
   /** 是否为必填项 */
   required?: boolean;
 }
@@ -33,7 +33,7 @@ export const ValidationRules = {
   /** 必填项验证 */
   required: (message = '此字段不能为空'): ValidationRule => ({
     name: 'required',
-    validate: (value: any) => {
+    validate: (value: unknown) => {
       if (value === null || value === undefined || value === '') {
         return message;
       }
@@ -82,9 +82,9 @@ export const ValidationRules = {
   }),
 
   /** 枚举值验证 */
-  oneOf: (values: any[], message?: string): ValidationRule => ({
+  oneOf: (values: unknown[], message?: string): ValidationRule => ({
     name: 'oneOf',
-    validate: (value: any) => {
+    validate: (value: unknown) => {
       if (!values.includes(value)) {
         return message || `请选择有效的选项`;
       }
@@ -93,7 +93,10 @@ export const ValidationRules = {
   }),
 
   /** 自定义验证 */
-  custom: (validator: (value: any, context?: any) => string | undefined, name = 'custom'): ValidationRule => ({
+  custom: (
+    validator: (value: unknown, context?: unknown) => string | undefined,
+    name = 'custom'
+  ): ValidationRule => ({
     name,
     validate: validator,
   }),
@@ -122,19 +125,24 @@ export const ProjectValidationRules = {
   /** 项目类型验证 */
   projectType: [
     ValidationRules.required('请选择项目类型'),
-    ValidationRules.oneOf(['web', 'mobile', 'desktop', 'api'], '请选择有效的项目类型'),
+    ValidationRules.oneOf(
+      ['web', 'mobile', 'desktop', 'api'],
+      '请选择有效的项目类型'
+    ),
   ],
 
   /** 项目模板验证 */
-  projectTemplate: [
-    ValidationRules.required('请选择项目模板'),
-  ],
+  projectTemplate: [ValidationRules.required('请选择项目模板')],
 };
 
 /**
  * 验证单个字段
  */
-export function validateField(value: any, rules: ValidationRule[], context?: any): ValidationResult {
+export function validateField(
+  value: unknown,
+  rules: ValidationRule[],
+  context?: unknown
+): ValidationResult {
   for (const rule of rules) {
     const error = rule.validate(value, context);
     if (error) {
@@ -144,7 +152,7 @@ export function validateField(value: any, rules: ValidationRule[], context?: any
       };
     }
   }
-  
+
   return {
     isValid: true,
   };
@@ -153,10 +161,10 @@ export function validateField(value: any, rules: ValidationRule[], context?: any
 /**
  * 验证表单对象
  */
-export function validateForm<T extends Record<string, any>>(
+export function validateForm<T extends Record<string, unknown>>(
   data: T,
   schema: Record<keyof T, ValidationRule[]>,
-  context?: any
+  context?: unknown
 ): FormValidationResult {
   const errors: Record<string, string> = {};
   let isValid = true;
@@ -178,11 +186,11 @@ export function validateForm<T extends Record<string, any>>(
 /**
  * 创建验证器类
  */
-export class FormValidator<T extends Record<string, any>> {
+export class FormValidator<T extends Record<string, unknown>> {
   private schema: Record<keyof T, ValidationRule[]>;
-  private context?: any;
+  private context?: unknown;
 
-  constructor(schema: Record<keyof T, ValidationRule[]>, context?: any) {
+  constructor(schema: Record<keyof T, ValidationRule[]>, context?: unknown) {
     this.schema = schema;
     this.context = context;
   }
@@ -190,7 +198,7 @@ export class FormValidator<T extends Record<string, any>> {
   /**
    * 验证单个字段
    */
-  validateField(field: keyof T, value: any): ValidationResult {
+  validateField(field: keyof T, value: unknown): ValidationResult {
     const rules = this.schema[field];
     if (!rules) {
       return { isValid: true };
@@ -208,7 +216,7 @@ export class FormValidator<T extends Record<string, any>> {
   /**
    * 更新上下文
    */
-  updateContext(context: any): void {
+  updateContext(context: unknown): void {
     this.context = context;
   }
 
@@ -224,7 +232,7 @@ export class FormValidator<T extends Record<string, any>> {
    */
   isFieldRequired(field: keyof T): boolean {
     const rules = this.schema[field] || [];
-    return rules.some(rule => rule.required);
+    return rules.some((rule) => rule.required);
   }
 }
 
@@ -251,7 +259,7 @@ export function validateProjectData(projectData: {
 }): void {
   const validator = createProjectFormValidator();
   const result = validator.validateForm(projectData);
-  
+
   if (!result.isValid) {
     const firstError = Object.values(result.errors)[0];
     throw new Error(firstError);
@@ -263,9 +271,13 @@ export function validateProjectData(projectData: {
  */
 export const ValidationUtils = {
   /** 检查是否为空值 */
-  isEmpty: (value: any): boolean => {
-    return value === null || value === undefined || value === '' || 
-           (typeof value === 'string' && !value.trim());
+  isEmpty: (value: unknown): boolean => {
+    return (
+      value === null ||
+      value === undefined ||
+      value === '' ||
+      (typeof value === 'string' && !value.trim())
+    );
   },
 
   /** 检查是否为有效的邮箱 */
@@ -285,7 +297,7 @@ export const ValidationUtils = {
   },
 
   /** 检查是否为数字 */
-  isNumber: (value: any): boolean => {
+  isNumber: (value: unknown): boolean => {
     if (value === '' || value === null || value === undefined) {
       return false;
     }
@@ -293,7 +305,7 @@ export const ValidationUtils = {
   },
 
   /** 检查是否为整数 */
-  isInteger: (value: any): boolean => {
+  isInteger: (value: unknown): boolean => {
     return Number.isInteger(Number(value));
   },
 

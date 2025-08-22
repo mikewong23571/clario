@@ -36,23 +36,20 @@ export interface ModalProps {
 }
 
 export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
-  (
-    {
-      open,
-      onClose,
-      title,
-      size = 'medium',
-      showCloseButton = true,
-      closeOnOverlayClick = true,
-      closeOnEscape = true,
-      centered = true,
-      className,
-      children,
-      onAfterOpen,
-      onAfterClose,
-    },
-    ref
-  ) => {
+  ({
+    open,
+    onClose,
+    title,
+    size = 'medium',
+    showCloseButton = true,
+    closeOnOverlayClick = true,
+    closeOnEscape = true,
+    centered = true,
+    className,
+    children,
+    onAfterOpen,
+    onAfterClose,
+  }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousActiveElement = useRef<HTMLElement | null>(null);
     const isAnimating = useRef(false);
@@ -86,7 +83,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       if (open) {
         // 保存当前焦点元素
         previousActiveElement.current = document.activeElement as HTMLElement;
-        
+
         // 延迟聚焦到模态框，等待动画完成
         setTimeout(() => {
           const modalElement = modalRef.current;
@@ -126,7 +123,9 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
         const firstFocusable = focusableElements[0] as HTMLElement;
-        const lastFocusable = focusableElements[focusableElements.length - 1] as HTMLElement;
+        const lastFocusable = focusableElements[
+          focusableElements.length - 1
+        ] as HTMLElement;
 
         if (event.shiftKey) {
           // Shift + Tab
@@ -189,12 +188,9 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
 
     const modalContent = (
       <div
-        className={clsx(
-          styles.overlay,
-          {
-            [styles.centered]: centered,
-          }
-        )}
+        className={clsx(styles.overlay, {
+          [styles.centered]: centered,
+        })}
         onClick={handleOverlayClick}
         role="dialog"
         aria-modal="true"
@@ -202,11 +198,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       >
         <div
           ref={modalRef}
-          className={clsx(
-            styles.modal,
-            styles[size],
-            className
-          )}
+          className={clsx(styles.modal, styles[size], className)}
           onKeyDown={handleKeyDown}
           tabIndex={-1}
         >
@@ -241,9 +233,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
               )}
             </div>
           )}
-          <div className={styles.content}>
-            {children}
-          </div>
+          <div className={styles.content}>{children}</div>
         </div>
       </div>
     );

@@ -3,7 +3,12 @@
  * 基于 Clario 设计系统的模态框组件
  */
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useCallback,
+  useImperativeHandle,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { clsx } from 'clsx';
 import styles from './Modal.module.css';
@@ -36,23 +41,29 @@ export interface ModalProps {
 }
 
 export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
-  ({
-    open,
-    onClose,
-    title,
-    size = 'medium',
-    showCloseButton = true,
-    closeOnOverlayClick = true,
-    closeOnEscape = true,
-    centered = true,
-    className,
-    children,
-    onAfterOpen,
-    onAfterClose,
-  }) => {
+  (
+    {
+      open,
+      onClose,
+      title,
+      size = 'medium',
+      showCloseButton = true,
+      closeOnOverlayClick = true,
+      closeOnEscape = true,
+      centered = true,
+      className,
+      children,
+      onAfterOpen,
+      onAfterClose,
+    },
+    ref
+  ) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousActiveElement = useRef<HTMLElement | null>(null);
     const isAnimating = useRef(false);
+
+    // 暴露ref给父组件
+    useImperativeHandle(ref, () => modalRef.current as HTMLDivElement, []);
 
     // 处理ESC键关闭
     const handleEscapeKey = useCallback(

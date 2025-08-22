@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import { ProjectDashboard } from './ProjectDashboard';
 import * as useProjectsHook from '../../hooks/useProjects';
@@ -38,22 +39,16 @@ const mockProjects: Project[] = [
   {
     id: 'project-1',
     name: 'Project Alpha',
-    description: 'First test project',
     status: 'active',
     specVersion: '1.0.0',
     lastUpdated: '2024-01-15T10:30:00Z',
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-15T10:30:00Z',
   },
   {
     id: 'project-2',
     name: 'Project Beta',
-    description: 'Second test project',
     status: 'completed',
     specVersion: '2.0.0',
     lastUpdated: '2024-01-10T08:15:00Z',
-    created_at: '2024-01-05T00:00:00Z',
-    updated_at: '2024-01-10T08:15:00Z',
   },
 ];
 
@@ -67,10 +62,61 @@ const createWrapper = () => {
   });
 
   const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>{children}</MemoryRouter>
+    </QueryClientProvider>
   );
   TestWrapper.displayName = 'TestWrapper';
   return TestWrapper;
+};
+
+// Helper to create a complete mock response for useFilteredProjects
+const createMockUseFilteredProjectsResponse = (
+  projects: Project[],
+  options: {
+    isLoading?: boolean;
+    isError?: boolean;
+    error?: Error | null;
+    totalCount?: number;
+    filteredCount?: number;
+  } = {}
+): ReturnType<typeof useProjectsHook.useFilteredProjects> => {
+  const {
+    isLoading = false,
+    isError = false,
+    error = null,
+    totalCount = projects.length,
+    filteredCount = projects.length,
+  } = options;
+
+  const status = isLoading ? 'pending' : isError ? 'error' : 'success';
+
+  return {
+    data: projects,
+    isLoading,
+    isError,
+    error,
+    totalCount,
+    filteredCount,
+    refetch: vi.fn(),
+    isPending: isLoading,
+    isLoadingError: isError,
+    isRefetchError: false,
+    isSuccess: status === 'success',
+    isStale: false,
+    isFetching: isLoading,
+    isFetched: !isLoading,
+    isFetchedAfterMount: !isLoading,
+    isRefetching: false,
+    isPlaceholderData: false,
+    status,
+    fetchStatus: isLoading ? 'fetching' : 'idle',
+    dataUpdatedAt: Date.now(),
+    errorUpdatedAt: isError ? Date.now() : 0,
+    failureCount: isError ? 1 : 0,
+    failureReason: error,
+    errorUpdateCount: isError ? 1 : 0,
+  } as unknown as ReturnType<typeof useProjectsHook.useFilteredProjects>;
 };
 
 describe('ProjectDashboard', () => {
@@ -90,15 +136,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('renders dashboard title and subtitle', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -109,15 +149,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('displays project count correctly', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -127,15 +161,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('renders create project button', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: [],
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: 0,
-      filteredCount: 0,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse([])
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -148,15 +176,9 @@ describe('ProjectDashboard', () => {
 
   it('opens create project modal when create button is clicked', async () => {
     const user = userEvent.setup();
-    mockUseFilteredProjects.mockReturnValue({
-      data: [],
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: 0,
-      filteredCount: 0,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse([])
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -171,15 +193,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('renders SearchBar component', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -192,15 +208,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('displays loading state', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: [],
-      isLoading: true,
-      isError: false,
-      error: null,
-      totalCount: 0,
-      filteredCount: 0,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse([], { isLoading: true })
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -213,15 +223,10 @@ describe('ProjectDashboard', () => {
 
   it('displays error state', () => {
     const errorMessage = 'Failed to fetch projects';
-    mockUseFilteredProjects.mockReturnValue({
-      data: [],
-      isLoading: false,
-      isError: true,
-      error: new Error(errorMessage),
-      totalCount: 0,
-      filteredCount: 0,
-      refetch: vi.fn(),
-    });
+    const error = new Error(errorMessage);
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse([], { isError: true, error })
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -232,15 +237,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('displays empty state when no projects', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: [],
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: 0,
-      filteredCount: 0,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse([])
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -253,15 +252,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('renders project cards when projects are available', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -275,37 +268,28 @@ describe('ProjectDashboard', () => {
 
   it('calls onProjectClick when project card is clicked', async () => {
     const user = userEvent.setup();
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
     });
 
-    const projectCard = screen.getByText('Project Alpha').closest('div');
-    if (projectCard) {
-      await user.click(projectCard);
-      expect(mockOnProjectClick).toHaveBeenCalledWith(mockProjects[0]);
-    }
+    // Since ProjectCard is wrapped in a Link, we need to find the link instead
+    const projectLink = screen.getByRole('link', { name: /project alpha/i });
+    expect(projectLink).toBeInTheDocument();
+
+    await user.click(projectLink);
+    // Since ProjectDashboard uses Link for navigation, onProjectClick won't be called
+    // Instead, we verify the link has the correct href
+    expect(projectLink).toHaveAttribute('href', '/projects/project-1');
   });
 
   it('passes correct props to SearchBar', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -318,15 +302,9 @@ describe('ProjectDashboard', () => {
   });
 
   it('handles responsive layout', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: mockProjects,
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: mockProjects.length,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse(mockProjects)
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),
@@ -338,15 +316,12 @@ describe('ProjectDashboard', () => {
   });
 
   it('displays filtered results message when search is active', () => {
-    mockUseFilteredProjects.mockReturnValue({
-      data: [mockProjects[0]], // Only one project matches filter
-      isLoading: false,
-      isError: false,
-      error: null,
-      totalCount: mockProjects.length,
-      filteredCount: 1,
-      refetch: vi.fn(),
-    });
+    mockUseFilteredProjects.mockReturnValue(
+      createMockUseFilteredProjectsResponse([mockProjects[0]], {
+        totalCount: mockProjects.length,
+        filteredCount: 1,
+      })
+    );
 
     render(<ProjectDashboard {...defaultProps} />, {
       wrapper: createWrapper(),

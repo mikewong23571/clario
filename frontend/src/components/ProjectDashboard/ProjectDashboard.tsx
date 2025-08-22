@@ -5,11 +5,13 @@
 
 import React, { useState, useCallback } from 'react';
 import { clsx } from 'clsx';
+import { Link } from 'react-router-dom';
 import { useFilteredProjects } from '../../hooks/useProjects';
 import { Project, ProjectFilter } from '../../types/project';
 import { SearchBar } from '../SearchBar';
 import { ProjectCard } from '../ProjectCard';
-import { CreateProjectModal } from '../CreateProjectModal';
+import { CreateProjectModal, ProjectFormData } from '../CreateProjectModal';
+import { api } from '../../services/api';
 import styles from './ProjectDashboard.module.css';
 
 interface ProjectDashboardProps {
@@ -25,7 +27,7 @@ interface ProjectDashboardProps {
  * 项目仪表盘组件
  */
 export function ProjectDashboard({
-  onProjectClick,
+  onProjectClick: _onProjectClick, // eslint-disable-line @typescript-eslint/no-unused-vars
   onCreateProject,
   className = '',
 }: ProjectDashboardProps) {
@@ -55,14 +57,15 @@ export function ProjectDashboard({
   }, []);
 
   // 处理项目卡片点击
-  const handleProjectClick = useCallback(
-    (project: Project) => {
-      if (onProjectClick) {
-        onProjectClick(project);
-      }
-    },
-    [onProjectClick]
-  );
+  // Note: Currently using Link for navigation instead of click handler
+  // const handleProjectClick = useCallback(
+  //   (project: Project) => {
+  //     if (onProjectClick) {
+  //       onProjectClick(project);
+  //     }
+  //   },
+  //   [onProjectClick]
+  // );
 
   // 处理创建项目按钮点击
   const handleCreateProject = useCallback(() => {
@@ -124,6 +127,7 @@ export function ProjectDashboard({
             type="button"
             className={styles.createButton}
             onClick={handleCreateProject}
+            data-testid="create-project-button-empty"
           >
             <svg
               className={styles.createButtonIcon}
@@ -235,6 +239,7 @@ export function ProjectDashboard({
               className={styles.createButton}
               onClick={handleCreateProject}
               disabled={isLoading}
+              data-testid="create-project-button"
             >
               <svg
                 className={styles.createButtonIcon}
@@ -272,11 +277,13 @@ export function ProjectDashboard({
         ) : (
           <div className={styles.projectGrid}>
             {projects.map((project) => (
-              <ProjectCard
+              <Link
+                to={`/projects/${project.id}`}
                 key={project.id}
-                project={project}
-                onClick={onProjectClick ? handleProjectClick : undefined}
-              />
+                className={styles.projectLink}
+              >
+                <ProjectCard project={project} />
+              </Link>
             ))}
           </div>
         )}
@@ -286,7 +293,51 @@ export function ProjectDashboard({
       <CreateProjectModal
         open={isCreateModalOpen}
         onClose={handleCreateModalClose}
-        onSuccess={handleProjectCreated}
+        onCreateProject={async (projectData: ProjectFormData) => {
+          try {
+            // 生成项目ID（使用项目名称的简化版本）
+            const projectId =
+              projectData.name
+                .toLowerCase()
+                .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '')
+                .substring(0, 50) || 'untitled-project';
+
+            // 构建项目规格数据
+            const projectSpec = {
+              lastUpdated: new Date().toISOString().split('T')[0],
+              specVersion: '1.0.0',
+              coreIdea: {
+                problemStatement: projectData.description || '待定义的问题陈述',
+                targetAudience: '待定义的目标用户',
+                coreValue: '待定义的核心价值',
+              },
+              scope: {
+                inScope: [],
+                outOfScope: [],
+              },
+              metadata: {
+                projectType: projectData.type,
+                template: projectData.template,
+                createdAt: new Date().toISOString(),
+              },
+            };
+
+            // 调用API创建项目
+            await api.createProject({
+              project_id: projectId,
+              spec: projectSpec,
+            });
+
+            // 创建成功后刷新项目列表
+            handleProjectCreated();
+          } catch (error) {
+            console.error('创建项目失败:', error);
+            // 这里可以添加用户友好的错误提示
+            throw error;
+          }
+        }}
       />
     </div>
   );

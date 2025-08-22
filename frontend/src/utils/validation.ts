@@ -48,7 +48,7 @@ export const ValidationRules = {
   /** 最小长度验证 */
   minLength: (min: number, message?: string): ValidationRule => ({
     name: 'minLength',
-    validate: (value: string) => {
+    validate: (value: unknown) => {
       if (typeof value !== 'string') return undefined;
       if (value.length < min) {
         return message || `至少需要 ${min} 个字符`;
@@ -60,7 +60,7 @@ export const ValidationRules = {
   /** 最大长度验证 */
   maxLength: (max: number, message?: string): ValidationRule => ({
     name: 'maxLength',
-    validate: (value: string) => {
+    validate: (value: unknown) => {
       if (typeof value !== 'string') return undefined;
       if (value.length > max) {
         return message || `不能超过 ${max} 个字符`;
@@ -72,7 +72,7 @@ export const ValidationRules = {
   /** 正则表达式验证 */
   pattern: (regex: RegExp, message: string): ValidationRule => ({
     name: 'pattern',
-    validate: (value: string) => {
+    validate: (value: unknown) => {
       if (typeof value !== 'string') return undefined;
       if (!regex.test(value)) {
         return message;

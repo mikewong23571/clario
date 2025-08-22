@@ -1,8 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ProjectDashboard } from './components/ProjectDashboard';
-import { Project } from './types/project';
+import { Outlet } from 'react-router-dom';
 import styles from './App.module.css';
 
 // 创建 QueryClient 实例
@@ -21,20 +20,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  // 处理项目点击
-  const handleProjectClick = (project: Project) => {
-    console.log('项目被点击:', project);
-    // TODO: 导航到项目详情页面
-    alert(`点击了项目: ${project.name} (${project.id})`);
-  };
-
-  // 处理创建项目
-  const handleCreateProject = () => {
-    console.log('创建新项目');
-    // TODO: 打开创建项目对话框
-    alert('创建新项目功能将在任务1.2中实现');
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className={styles.app}>
@@ -48,10 +33,7 @@ function App() {
         </header>
 
         <main className={styles.appMain}>
-          <ProjectDashboard
-            onProjectClick={handleProjectClick}
-            onCreateProject={handleCreateProject}
-          />
+          <Outlet />
         </main>
       </div>
 

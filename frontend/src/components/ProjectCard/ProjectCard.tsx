@@ -48,7 +48,20 @@ export function ProjectCard({
   // 格式化日期
   const formatDate = (dateString: string) => {
     try {
-      const date = new Date(dateString);
+      // 处理只有日期部分的字符串（如 "2025-08-22"）
+      // 添加时间部分以避免时区转换问题
+      let dateToProcess = dateString;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        dateToProcess = `${dateString}T12:00:00`;
+      }
+
+      const date = new Date(dateToProcess);
+
+      // 检查日期是否有效
+      if (isNaN(date.getTime())) {
+        return '未知时间';
+      }
+
       const now = new Date();
       const diffMs = now.getTime() - date.getTime();
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));

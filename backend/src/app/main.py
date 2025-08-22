@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api import projects_router, validation_router
+from .api import agents, projects, validation
 
 
 app = FastAPI(
@@ -20,8 +20,9 @@ app.add_middleware(
 )
 
 # 注册路由
-app.include_router(projects_router)
-app.include_router(validation_router)
+app.include_router(projects.router)
+app.include_router(validation.router)
+app.include_router(agents.router)
 
 
 @app.get("/health")

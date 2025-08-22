@@ -8,7 +8,19 @@ import { clsx } from 'clsx';
 import styles from './Input.module.css';
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    | 'size'
+    | 'showCount'
+    | 'showRequiredMark'
+    | 'clearable'
+    | 'onClear'
+    | 'helperText'
+    | 'errorMessage'
+    | 'leftIcon'
+    | 'rightIcon'
+    | 'wrapperClassName'
+  > {
   /** 输入框标签 */
   label?: string;
   /** 输入框大小 */
@@ -76,8 +88,27 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     // Filter out custom props that shouldn't go to the DOM input
     const {
       // Remove any custom props that aren't native input props
+      showCount: _showCount,
+      showRequiredMark: _showRequiredMark,
+      clearable: _clearable,
+      onClear: _onClear,
+      helperText: _helperText,
+      errorMessage: _errorMessage,
+      leftIcon: _leftIcon,
+      rightIcon: _rightIcon,
+      wrapperClassName: _wrapperClassName,
       ...domProps
     } = inputProps;
+    // Variables are intentionally unused as they're being filtered out
+    void _showCount;
+    void _showRequiredMark;
+    void _clearable;
+    void _onClear;
+    void _helperText;
+    void _errorMessage;
+    void _leftIcon;
+    void _rightIcon;
+    void _wrapperClassName;
     const [focused, setFocused] = useState(false);
     const [internalValue, setInternalValue] = useState(defaultValue || '');
 

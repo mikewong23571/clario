@@ -14,12 +14,21 @@ globalThis.fetch = mockFetch;
 
 // Mock data
 const mockProject: ProjectSpec = {
+  lastUpdated: '2024-01-15T10:30:00Z',
+  specVersion: '1.0.0',
+  coreIdea: {
+    problemStatement: 'Test problem',
+    targetAudience: 'Test users',
+    coreValue: 'Test value',
+  },
+  scope: {
+    inScope: ['feature1', 'feature2'],
+    outOfScope: ['feature3'],
+  },
   id: 'test-project-1',
   name: 'Test Project',
   description: 'A test project for unit testing',
   status: 'active',
-  specVersion: '1.0.0',
-  lastUpdated: '2024-01-15T10:30:00Z',
   created_at: '2024-01-01T00:00:00Z',
   updated_at: '2024-01-15T10:30:00Z',
 };
@@ -141,18 +150,30 @@ describe('API Service', () => {
 
   describe('createProject', () => {
     const createRequest: CreateProjectRequest = {
-      name: 'New Project',
-      description: 'A new project description',
+      project_id: 'new-project-id',
+      spec: {
+        name: 'New Project',
+        description: 'A new project description',
+      },
     };
 
     it('creates project successfully', async () => {
       const createdProject: ProjectSpec = {
-        id: 'new-project-id',
-        name: createRequest.name,
-        description: createRequest.description,
-        status: 'draft',
-        specVersion: '1.0.0',
         lastUpdated: '2024-01-15T10:30:00Z',
+        specVersion: '1.0.0',
+        coreIdea: {
+          problemStatement: 'Test problem',
+          targetAudience: 'Test users',
+          coreValue: 'Test value',
+        },
+        scope: {
+          inScope: ['feature1'],
+          outOfScope: ['feature2'],
+        },
+        id: 'new-project-id',
+        name: 'New Project',
+        description: 'A new project description',
+        status: 'draft',
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-15T10:30:00Z',
       };
@@ -324,8 +345,11 @@ describe('API Service', () => {
   describe('Request Headers', () => {
     it('includes correct content-type for POST requests', async () => {
       const createRequest: CreateProjectRequest = {
-        name: 'Test Project',
-        description: 'Test Description',
+        project_id: 'test-project-1',
+        spec: {
+          name: 'Test Project',
+          description: 'Test Description',
+        },
       };
       mockFetch.mockResolvedValue(createMockResponse(mockProject, 201));
 

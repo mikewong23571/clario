@@ -1,0 +1,244 @@
+/* 消息列表容器 */
+.messageList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  scroll-behavior: smooth;
+}
+
+/* 消息项容器 */
+.messageItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  max-width: 85%;
+  word-wrap: break-word;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* 用户消息样式 */
+.messageItem.user {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+/* AI助手消息样式 */
+.messageItem.assistant {
+  align-self: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: 4px;
+}
+
+/* 消息头部信息 */
+.messageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.messageRole {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.messageTime {
+  font-size: 0.8125rem;
+  opacity: 0.7;
+}
+
+/* 消息内容 */
+.messageContent {
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Agent信息 */
+.agentInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--color-background);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-border-light);
+}
+
+.agentBadge {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* 文档更新信息 */
+.documentUpdates {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--color-success-light);
+  border: 1px solid var(--color-success);
+  border-radius: 8px;
+}
+
+.documentUpdates h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--color-success-dark);
+  font-weight: 600;
+}
+
+.documentUpdateItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.documentUpdateItem::before {
+  content: '📄';
+  font-size: 0.75rem;
+}
+
+/* 加载指示器 */
+.loadingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  border-bottom-left-radius: 4px;
+  max-width: 85%;
+  align-self: flex-start;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loadingDots {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.loadingDot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  animation: loadingPulse 1.4s ease-in-out infinite both;
+}
+
+.loadingDot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loadingDot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.loadingText {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* 空状态 */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: var(--color-text-secondary);
+  gap: 1rem;
+}
+
+.emptyState h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.875rem;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loadingPulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .messageItem {
+    max-width: 95%;
+    padding: 0.75rem;
+  }
+  
+  .messageHeader {
+    font-size: 0.8125rem;
+  }
+  
+  .messageContent {
+    font-size: 0.875rem;
+  }
+  
+  .agentInfo {
+    font-size: 0.8125rem;
+  }
+}
+
+/* 滚动条样式 */
+.messageList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messageList::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+.messageList::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.messageList::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}

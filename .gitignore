@@ -303,3 +303,5 @@ data/sessions/
 data/exports/
 temp/
 cache/
+
+test-results/
